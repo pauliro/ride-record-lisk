@@ -21,8 +21,40 @@ const RegisterVehiclePage = () => {
     functionName: "registerVehicle",
     args: [undefined, undefined], // Placeholder for serialHash and odometer
     value: undefined,
-    onBlockConfirmation: txnReceipt => {
-      console.log("📦 Transaction blockHash", txnReceipt.blockHash);
+    onBlockConfirmation: async (txnReceipt) => {
+      console.log("📦 Transaction blockHash and receipt:", txnReceipt.blockHash, txnReceipt);
+      // Now that we have the full receipt, we can send data to the backend API
+      try {
+        if (!txnReceipt || !txnReceipt.from) {
+          throw new Error("Transaction receipt or sender address not found in onBlockConfirmation.");
+        }
+
+        const currentOwner = txnReceipt.from;
+        const txHash = txnReceipt.transactionHash;
+        const serialHash = keccak256(Buffer.from(vin)); // Re-derive serialHash if needed, or pass it from handleSubmit scope
+
+        const response = await fetch("/api/vehicles", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            serialHash,
+            vinMasked: vin.slice(-4),
+            make,
+            model,
+            year: parseInt(year),
+            odometer: parseInt(odometer),
+            currentOwner,
+            txHash,
+          }),
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || "Failed to register vehicle in backend");
+
+        router.push(`/vehicle/${serialHash}`); // Navigate to detail page after backend update
+      } catch (err: any) {
+        console.error("Error sending data to backend after block confirmation:", err);
+        setError(err.message || "Failed to update backend after transaction.");
+      }
     },
   });
 
@@ -36,36 +68,11 @@ const RegisterVehiclePage = () => {
       const serialHash = keccak256(Buffer.from(vin));
 
       // 2. Call the registerVehicle smart contract function
-      const { receipt } = await registerVehicle({
+      // The onBlockConfirmation callback will handle the backend API call and navigation
+      await registerVehicle({
         args: [serialHash, BigInt(odometer)],
       });
 
-      if (!receipt || !receipt.from) {
-        throw new Error("Transaction receipt or sender address not found.");
-      }
-
-      const currentOwner = receipt.from;
-      const txHash = receipt.transactionHash;
-
-      // 3. Send data to backend API
-      const response = await fetch("/api/vehicles", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          serialHash,
-          vinMasked: vin.slice(-4), // Mask VIN for privacy
-          make,
-          model,
-          year: parseInt(year),
-          odometer: parseInt(odometer),
-          currentOwner,
-          txHash,
-        }),
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Failed to register vehicle in backend");
-
-      router.push(`/vehicle/${serialHash}`); // Navigate to detail page
     } catch (err: any) {
       console.error("Error registering vehicle:", err);
       setError(err.message || "Failed to register vehicle.");

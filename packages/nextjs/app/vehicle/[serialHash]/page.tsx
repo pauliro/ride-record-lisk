@@ -39,26 +39,31 @@ const VehicleDetailPage = () => {
   const [transferOdometer, setTransferOdometer] = useState("");
 
   // Read current owner from contract
-  const { data: contractOwner } = useScaffoldContractRead({
+  const { data: contractOwner, isLoading: isLoadingContractOwner } = useScaffoldContractRead({
     contractName: "RideRecords",
     functionName: "getVehicleOwner",
     args: [serialHash as `0x${string}`],
   });
 
   // Fetch on-chain events
-  const { data: registeredEvents } = useScaffoldEventHistory({
+  const { data: registeredEvents, isLoading: isLoadingRegisteredEvents } = useScaffoldEventHistory({
     contractName: "RideRecords",
     eventName: "VehicleRegistered",
     filters: { serialHash: serialHash as `0x${string}` },
     fromBlock: BigInt(0),
   });
 
-  const { data: transferredEvents } = useScaffoldEventHistory({
+  const { data: transferredEvents, isLoading: isLoadingTransferredEvents } = useScaffoldEventHistory({
     contractName: "RideRecords",
     eventName: "VehicleTransferred",
     filters: { serialHash: serialHash as `0x${string}` },
     fromBlock: BigInt(0),
   });
+
+  console.log("VehicleDetailPage - serialHash:", serialHash);
+  console.log("VehicleDetailPage - contractOwner:", contractOwner);
+  console.log("VehicleDetailPage - registeredEvents:", registeredEvents);
+  console.log("VehicleDetailPage - transferredEvents:", transferredEvents);
 
   // Write function for transferring ownership
   const { writeAsync: transferVehicle } = useScaffoldContractWrite({
@@ -66,15 +71,52 @@ const VehicleDetailPage = () => {
     functionName: "transferVehicle",
     args: [undefined, undefined, undefined], // serialHash, to, odometer
     value: undefined,
-    onBlockConfirmation: txnReceipt => {
+    onBlockConfirmation: async txnReceipt => {
       console.log("📦 Transfer transaction blockHash", txnReceipt.blockHash);
-      // TODO: Call backend to update off-chain history with txHash
+      // Call backend to update off-chain history with txHash
+      try {
+        if (!txnReceipt || !txnReceipt.from) {
+          throw new Error("Transaction receipt or sender address not found in onBlockConfirmation.");
+        }
+
+        const previousOwnerAddress = txnReceipt.from;
+        const txHash = txnReceipt.transactionHash;
+
+        const response = await fetch(`/api/vehicles/${serialHash}/transfer`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            newOwnerAddress: transferToAddress,
+            previousOwnerAddress,
+            odometer: parseInt(transferOdometer),
+            txHash,
+          }),
+        });
+
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || "Failed to update backend with transfer data");
+
+        // Instead of manually updating history, trigger a re-fetch of vehicle data
+        // The useEffect will re-run due to changes in contractOwner/transferredEvents
+        // and will also re-fetch backendData.
+
+        // Clear form fields
+        setTransferToAddress("");
+        setTransferOdometer("");
+
+      } catch (err: any) {
+        console.error("Error sending transfer data to backend after block confirmation:", err);
+        setError(err.message || "Failed to update backend after transfer.");
+      }
     },
   });
 
+  // Combine all loading states
+  const isPageLoading = isLoadingContractOwner || isLoadingRegisteredEvents || isLoadingTransferredEvents || loading;
+
   useEffect(() => {
     const fetchVehicleData = async () => {
-      if (!serialHash) return;
+      if (!serialHash || isLoadingContractOwner || isLoadingRegisteredEvents || isLoadingTransferredEvents) return; // Wait for on-chain data to load
       setLoading(true);
       setError(null);
 
@@ -91,24 +133,28 @@ const VehicleDetailPage = () => {
         const combinedHistory: HistoryEvent[] = [...backendData.history];
 
         registeredEvents?.forEach(event => {
-          combinedHistory.push({
-            type: "REGISTERED",
-            timestamp: new Date(Number(event.log.block.timestamp) * 1000).toISOString(),
-            actor: event.args.owner || "",
-            odometer: Number(event.args.odometer),
-            chain: { network: "Base Sepolia", txHash: event.log.transactionHash },
-          });
+          if (event.log && event.log.block && event.args) {
+            combinedHistory.push({
+              type: "REGISTERED",
+              timestamp: new Date(Number(event.log.block.timestamp) * 1000).toISOString(),
+              actor: event.args.owner || "",
+              odometer: Number(event.args.odometer),
+              chain: { network: "Base Sepolia", txHash: event.log.transactionHash },
+            });
+          }
         });
 
         transferredEvents?.forEach(event => {
-          combinedHistory.push({
-            type: "TRANSFER_COMPLETED",
-            timestamp: new Date(Number(event.log.block.timestamp) * 1000).toISOString(),
-            actor: event.args.from || "", // Previous owner
-            to: event.args.to || "", // New owner
-            odometer: Number(event.args.odometer),
-            chain: { network: "Base Sepolia", txHash: event.log.transactionHash },
-          });
+          if (event.log && event.log.block && event.args) {
+            combinedHistory.push({
+              type: "TRANSFER_COMPLETED",
+              timestamp: new Date(Number(event.log.block.timestamp) * 1000).toISOString(),
+              actor: event.args.from || "", // Previous owner
+              to: event.args.to || "", // New owner
+              odometer: Number(event.args.odometer),
+              chain: { network: "Base Sepolia", txHash: event.log.transactionHash },
+            });
+          }
         });
 
         combinedHistory.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
@@ -123,7 +169,8 @@ const VehicleDetailPage = () => {
     };
 
     fetchVehicleData();
-  }, [serialHash, registeredEvents, transferredEvents, contractOwner]);
+    // Added isLoading states to dependencies to trigger re-fetch when contract data is ready
+  }, [serialHash, registeredEvents, transferredEvents, contractOwner, isLoadingContractOwner, isLoadingRegisteredEvents, isLoadingTransferredEvents]);
 
   const handleAddMaintenance = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -146,17 +193,8 @@ const VehicleDetailPage = () => {
       if (!response.ok) throw new Error(data.message || "Failed to add maintenance record");
 
       // Refresh vehicle data to show the new maintenance record
-      // The useEffect will re-run due to changes in backend data (simulated here for now)
-      if (vehicle) {
-        const newHistory = [...vehicle.history, {
-          type: "MAINTENANCE",
-          timestamp: new Date().toISOString(),
-          actor: connectedAddress,
-          data: { notes: maintenanceDescription },
-        }];
-        newHistory.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
-        setVehicle({ ...vehicle, history: newHistory });
-      }
+      // Trigger re-fetch of vehicle data
+      await fetchVehicleData(); // Call the local function to re-fetch and update state
 
       setMaintenanceDescription("");
     } catch (err: any) {
@@ -199,19 +237,8 @@ const VehicleDetailPage = () => {
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || "Failed to update backend with transfer data");
 
-      // Refresh data after transfer
-      if (vehicle) {
-        const newHistory = [...vehicle.history, {
-          type: "TRANSFER_COMPLETED",
-          timestamp: new Date().toISOString(),
-          actor: previousOwnerAddress,
-          to: transferToAddress,
-          odometer: parseInt(transferOdometer),
-          chain: { network: "Base Sepolia", txHash },
-        }];
-        newHistory.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
-        setVehicle({ ...vehicle, history: newHistory, currentOwner: transferToAddress });
-      }
+      // Trigger a re-fetch of vehicle data after successful transfer
+      await fetchVehicleData(); // Call the local function to re-fetch and update state
 
       setTransferToAddress("");
       setTransferOdometer("");
@@ -221,9 +248,9 @@ const VehicleDetailPage = () => {
     }
   };
 
-  if (loading) return <div className="text-center mt-10">Loading vehicle data...</div>;
+  if (isPageLoading || !vehicle) return <div className="text-center mt-10">Loading vehicle data...</div>;
   if (error) return <div className="text-center mt-10 text-red-500">Error: {error}</div>;
-  if (!vehicle) return <div className="text-center mt-10">Vehicle not found.</div>;
+  
 
   const isOwner = connectedAddress && contractOwner && connectedAddress === contractOwner;
 

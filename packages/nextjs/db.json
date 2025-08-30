@@ -1,3 +1,92 @@
 {
-  "vehicles": []
+  "vehicles": [
+    {
+      "id": "9sncoaXpIMz-x3eMpuI0m",
+      "serialHash": "0xce1d2aa71bda0d41c98f250f4220b5d1c35775466e090f3dcf18e54604021881",
+      "vinMasked": "C126",
+      "make": "Ford",
+      "model": "Fiesta",
+      "year": 2022,
+      "odometer": 123,
+      "currentOwner": "0xd6f050a4f72abb98fb298f9173254645b82c3dc4",
+      "history": [
+        {
+          "type": "REGISTERED",
+          "timestamp": "2025-08-30T04:45:51.839Z",
+          "actor": "0xd6f050a4f72abb98fb298f9173254645b82c3dc4",
+          "odometer": 123,
+          "chain": {
+            "network": "Base Sepolia",
+            "txHash": "0x8405dde30f1d090ddb90a0790168c7cb44359a63a835329de251ec1ff4b11aa3"
+          }
+        }
+      ]
+    },
+    {
+      "id": "3pefN4Bct0kq4iF3g8UtF",
+      "serialHash": "0x0ea3f539a586ed1e00d5f4eb52495a99c508e641591eba9b398e81716f8a099b",
+      "vinMasked": "AC18",
+      "make": "Ford",
+      "model": "Fiesta",
+      "year": 2000,
+      "odometer": 200000,
+      "currentOwner": "0xd6f050a4f72abb98fb298f9173254645b82c3dc4",
+      "history": [
+        {
+          "type": "REGISTERED",
+          "timestamp": "2025-08-30T04:52:12.568Z",
+          "actor": "0xd6f050a4f72abb98fb298f9173254645b82c3dc4",
+          "odometer": 200000,
+          "chain": {
+            "network": "Base Sepolia",
+            "txHash": "0xa3d8ff495cd958f29ca84ec1556d7926306bd18ce230b43672f675baf061e354"
+          }
+        }
+      ]
+    },
+    {
+      "id": "9-G0Vepqap_DxrqIQRdSV",
+      "serialHash": "0x976489d32d0ac1839ad5cb91b2516dd4e5bbf3f4dcc519e32b2cecac3688256f",
+      "vinMasked": "1260",
+      "make": "Ford",
+      "model": "Fiesta",
+      "year": 2022,
+      "odometer": 2333,
+      "currentOwner": "0xd6f050a4f72abb98fb298f9173254645b82c3dc4",
+      "history": [
+        {
+          "type": "REGISTERED",
+          "timestamp": "2025-08-30T04:57:02.539Z",
+          "actor": "0xd6f050a4f72abb98fb298f9173254645b82c3dc4",
+          "odometer": 2333,
+          "chain": {
+            "network": "Base Sepolia",
+            "txHash": "0xccd788e195059ac34fab0e99eb0915ed84ce5a2498fd0231b641c934c349a085"
+          }
+        }
+      ]
+    },
+    {
+      "id": "iCVhOwnmezgpcX69RvLN9",
+      "serialHash": "0x2074d111ef0d84f53f0af4ffa267bfedbd68c03df3ae054323c9117a30250c33",
+      "vinMasked": "1233",
+      "make": "Ford",
+      "model": "Fiesta",
+      "year": 2020,
+      "odometer": 200,
+      "currentOwner": "0xd6f050a4f72abb98fb298f9173254645b82c3dc4",
+      "history": [
+        {
+          "type": "REGISTERED",
+          "timestamp": "2025-08-30T04:59:21.837Z",
+          "actor": "0xd6f050a4f72abb98fb298f9173254645b82c3dc4",
+          "odometer": 200,
+          "chain": {
+            "network": "Base Sepolia",
+            "txHash": "0x32f26e5f16ff965a8b0ad6214f6ead587238f3b1ff4888085da166b79181fe77"
+          }
+        }
+      ]
+    }
+  ]
 }
