@@ -72,7 +72,7 @@ Follow these steps to get your RideRecords dApp up and running:
 1.  **Clone the repository & install dependencies**:
 
     ```bash
-git clone https://github.com/LiskHQ/scaffold-lisk.git
+git clone https://github.com/pauliro/ride-record-lisk.git
 cd scaffold-lisk
 yarn install
 ```
@@ -138,4 +138,4 @@ yarn start
 
 ## 🙏 Credits
 
-RideRecords is built upon the excellent foundation provided by [Scaffold-Lisk](https://github.com/LiskHQ/scaffold-lisk) (a fork of [Scaffold-ETH2](https://github.com/scaffold-eth/scaffold-eth-2)), a toolkit that greatly simplifies dApp development. Special thanks to the creators and maintainers of these projects and all the underlying technologies (Next.js, Hardhat, Wagmi, RainbowKit, Viem, Tailwind CSS).
+RideRecords is built upon the excellent foundation provided by [Scaffold-Lisk](https://github.com/LiskHQ/scaffold-lisk) (a fork of [Scaffold-ETH2](https://github.com/scaffold-eth/scaffold-eth-2)), a toolkit that greatly simplifies dApp development. Special thanks to the creators and maintainers of these projects and all the underlying technologies (Next.js, Hardhat, Wagmi, RainbowKit, Viem, Tailwind CSS) and of course all mentors.
