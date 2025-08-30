@@ -5,6 +5,15 @@ import { useParams } from "next/navigation";
 import { useAccount } from "wagmi";
 import { useScaffoldEventHistory, useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import { formatUnits } from "viem";
+import Link from "next/link";
+
+// Helper to truncate addresses for display
+const truncateAddress = (address: string) => {
+  if (!address) return "";
+  const start = address.substring(0, 6);
+  const end = address.substring(address.length - 4);
+  return `${start}...${end}`;
+};
 
 interface HistoryEvent {
   type: "REGISTERED" | "MAINTENANCE" | "TRANSFER_COMPLETED";
@@ -255,118 +264,140 @@ const VehicleDetailPage = () => {
   const isOwner = connectedAddress && contractOwner && connectedAddress === contractOwner;
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">Vehicle Details: {vehicle.make} {vehicle.model} ({vehicle.year})</h1>
-      <p>VIN (masked): {vehicle.vinMasked}</p>
-      <p>Current Owner: {vehicle.currentOwner}</p>
-      <p>Serial Hash: {vehicle.serialHash}</p>
+    <div className="flex flex-col items-center justify-center min-h-screen-no-header bg-gradient-to-br from-morado to-blue-900 text-white p-6">
+      <div className="max-w-4xl w-full card-bg p-8 rounded-xl shadow-lg border border-gris-neutro animate-fade-in">
+        <h1 className="text-3xl font-bold text-center mb-8 text-aqua">Vehicle Details: {vehicle.make} {vehicle.model} ({vehicle.year})</h1>
 
-      <h2 className="text-2xl font-bold mt-8 mb-4">Vehicle History</h2>
-      <div className="space-y-4">
-        {vehicle.history.length === 0 ? (
-          <p>No history found for this vehicle.</p>
-        ) : (
-          vehicle.history.map((event, index) => (
-            <div key={index} className="bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200">
-              <p className="font-semibold">Type: {event.type}</p>
-              <p>Timestamp: {new Date(event.timestamp).toLocaleString()}</p>
-              <p>Actor: {event.actor}</p>
-              {event.odometer && <p>Odometer: {event.odometer} km</p>}
-              {event.data?.notes && <p>Notes: {event.data.notes}</p>}
-              {event.data?.evidenceUri && <p>Evidence: <a href={event.data.evidenceUri} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">View</a></p>}
-              {event.to && <p>To: {event.to}</p>}
-              {event.chain && (
-                <p>
-                  On-chain Tx:
-                  <a
-                    href={`https://sepolia.basescan.org/tx/${event.chain.txHash}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 hover:underline ml-2"
-                  >
-                    View on Base Sepolia Explorer
-                  </a>
-                </p>
-              )}
-            </div>
-          ))
-        )}
-      </div>
-
-      {isOwner && (
-        <div className="mt-8 space-y-6">
-          <h2 className="text-2xl font-bold mb-4">Owner Actions</h2>
-
-          {/* Add Maintenance Record */}
-          <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-            <h3 className="text-xl font-semibold mb-3">Add Maintenance Record</h3>
-            <form onSubmit={handleAddMaintenance} className="space-y-3">
-              <div>
-                <label htmlFor="maintenanceDescription" className="block text-sm font-medium text-gray-700">
-                  Description
-                </label>
-                <input
-                  type="text"
-                  id="maintenanceDescription"
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                  value={maintenanceDescription}
-                  onChange={e => setMaintenanceDescription(e.target.value)}
-                  required
-                />
-              </div>
-              {/* File upload can be added here as a stretch goal */}
-              <button
-                type="submit"
-                className="bg-green-500 text-white p-2 rounded-md hover:bg-green-600 disabled:bg-green-300"
-                disabled={loading} // Using general loading for now
-              >
-                Add Maintenance
-              </button>
-            </form>
-          </div>
-
-          {/* Transfer Ownership */}
-          <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-            <h3 className="text-xl font-semibold mb-3">Transfer Ownership</h3>
-            <form onSubmit={handleTransferOwnership} className="space-y-3">
-              <div>
-                <label htmlFor="transferToAddress" className="block text-sm font-medium text-gray-700">
-                  Recipient Address
-                </label>
-                <input
-                  type="text"
-                  id="transferToAddress"
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                  value={transferToAddress}
-                  onChange={e => setTransferToAddress(e.target.value)}
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="transferOdometer" className="block text-sm font-medium text-gray-700">
-                  Odometer (km)
-                </label>
-                <input
-                  type="number"
-                  id="transferOdometer"
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                  value={transferOdometer}
-                  onChange={e => setTransferOdometer(e.target.value)}
-                  required
-                />
-              </div>
-              {error && <p className="text-red-500 text-sm">{error}</p>}
-              <button
-                type="submit"
-                className="bg-yellow-500 text-white p-2 rounded-md hover:bg-yellow-600 disabled:bg-yellow-300"
-                disabled={loading} // Using general loading for now
-              >
-                Transfer Ownership
-              </button>
-            </form>
+        {/* Vehicle Information */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-aqua mb-4">Information</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-lg">
+            <p><strong>Make:</strong> {vehicle.make}</p>
+            <p><strong>Model:</strong> {vehicle.model}</p>
+            <p><strong>Year:</strong> {vehicle.year}</p>
+            <p><strong>VIN (masked):</strong> {vehicle.vinMasked}</p>
+            <p><strong>Serial Hash:</strong> {truncateAddress(vehicle.serialHash)}</p>
+            <p><strong>Odometer:</strong> {vehicle.odometer} km</p>
+            <p><strong>Current Owner:</strong> {truncateAddress(vehicle.currentOwner)}</p>
           </div>
         </div>
-      )}
+
+        {/* Vehicle History */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-aqua mb-4">History</h2>
+          <div className="space-y-4">
+            {vehicle.history.length === 0 ? (
+              <p className="text-gris-neutro">No history found for this vehicle.</p>
+            ) : (
+              vehicle.history.map((event, index) => (
+                <div key={index} className="bg-gray-800 p-4 rounded-lg shadow-md border border-gris-neutro">
+                  <p className="font-semibold text-aqua">Type: {event.type.replace(/_/g, " ")}</p>
+                  <p className="text-sm text-gris-neutro">Timestamp: {new Date(event.timestamp).toLocaleString()}</p>
+                  <p className="text-sm text-gris-neutro">Actor: {truncateAddress(event.actor)}</p>
+                  {event.odometer && <p className="text-sm text-gris-neutro">Odometer: {event.odometer} km</p>}
+                  {event.data?.notes && <p className="text-sm text-gris-neutro">Notes: {event.data.notes}</p>}
+                  {event.to && <p className="text-sm text-gris-neutro">To: {truncateAddress(event.to)}</p>}
+                  {event.chain && (
+                    <p className="text-sm text-gris-neutro">
+                      On-chain Tx:
+                      <a
+                        href={`https://sepolia.basescan.org/tx/${event.chain.txHash}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-aqua hover:underline ml-1"
+                      >
+                        {truncateAddress(event.chain.txHash)}
+                      </a>
+                    </p>
+                  )}
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        {isOwner && (
+          <div className="mt-8 space-y-6">
+            <h2 className="text-2xl font-bold text-aqua mb-4">Owner Actions</h2>
+
+            {/* Add Maintenance Record */}
+            <div className="card-bg p-6 rounded-lg shadow-md border border-gris-neutro">
+              <h3 className="text-xl font-semibold text-aqua mb-3">Add Maintenance Record</h3>
+              <form onSubmit={handleAddMaintenance} className="space-y-4">
+                <div>
+                  <label htmlFor="maintenanceDescription" className="block text-sm font-medium text-gris-neutro mb-1">
+                    Description
+                  </label>
+                  <input
+                    type="text"
+                    id="maintenanceDescription"
+                    className="mt-1 block w-full bg-gray-700 text-white border border-gray-600 rounded-md shadow-sm p-3 focus:border-aqua focus:ring-aqua"
+                    value={maintenanceDescription}
+                    onChange={e => setMaintenanceDescription(e.target.value)}
+                    required
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="w-full bg-morado text-white font-bold py-3 px-4 rounded-full transition-transform transform hover:bg-opacity-80 disabled:bg-gray-600 disabled:cursor-not-allowed"
+                  disabled={loading}
+                >
+                  Add Maintenance
+                </button>
+              </form>
+            </div>
+
+            {/* Transfer Ownership */}
+            <div className="card-bg p-6 rounded-lg shadow-md border border-gris-neutro">
+              <h3 className="text-xl font-semibold text-aqua mb-3">Transfer Ownership</h3>
+              <form onSubmit={handleTransferOwnership} className="space-y-4">
+                <div>
+                  <label htmlFor="transferToAddress" className="block text-sm font-medium text-gris-neutro mb-1">
+                    Recipient Address
+                  </label>
+                  <input
+                    type="text"
+                    id="transferToAddress"
+                    className="mt-1 block w-full bg-gray-700 text-white border border-gray-600 rounded-md shadow-sm p-3 focus:border-aqua focus:ring-aqua"
+                    value={transferToAddress}
+                    onChange={e => setTransferToAddress(e.target.value)}
+                    required
+                  />
+                </div>
+                <div>
+                  <label htmlFor="transferOdometer" className="block text-sm font-medium text-gris-neutro mb-1">
+                    Odometer (km)
+                  </label>
+                  <input
+                    type="number"
+                    id="transferOdometer"
+                    className="mt-1 block w-full bg-gray-700 text-white border border-gray-600 rounded-md shadow-sm p-3 focus:border-aqua focus:ring-aqua"
+                    value={transferOdometer}
+                    onChange={e => setTransferOdometer(e.target.value)}
+                    required
+                  />
+                </div>
+                {error && <p className="text-red-400 text-sm mt-2">{error}</p>}
+                <button
+                  type="submit"
+                  className="w-full bg-aqua text-blue-900 font-bold py-3 px-4 rounded-full transition-transform transform hover:bg-opacity-80 disabled:bg-gray-600 disabled:cursor-not-allowed"
+                  disabled={loading}
+                >
+                  Transfer Ownership
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
+
+        <div className="mt-8 text-center">
+          <Link href="/my-vehicles" passHref>
+            <button className="bg-gray-700 text-white font-bold py-3 px-8 rounded-full transition-transform transform hover:bg-gray-600">
+              ← Back to My Vehicles
+            </button>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 };

@@ -8,9 +8,12 @@ import { WagmiConfig } from "wagmi";
 import { Footer } from "~~/components/Footer";
 import { Header } from "~~/components/Header";
 import { BlockieAvatar } from "~~/components/scaffold-eth";
+import { RainbowKitCustomConnectButton } from "~~/components/scaffold-eth"; // Import the button
 import { ProgressBar } from "~~/components/scaffold-eth/ProgressBar";
 import { useNativeCurrencyPrice } from "~~/hooks/scaffold-eth";
 import { useGlobalState } from "~~/services/store/store";
+import { TopRightNavigation } from "~~/components/TopRightNavigation"; // Import the new component
+import { TopLeftLogo } from "~~/components/TopLeftLogo"; // Import the new component
 import { wagmiConfig } from "~~/services/web3/wagmiConfig";
 import { appChains } from "~~/services/web3/wagmiConnectors";
 
@@ -27,7 +30,13 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <div className="flex flex-col min-h-screen">
-        <Header />
+        {/* <Header /> */}
+        <div className="absolute top-0 left-0 z-50 mt-4 ml-4">
+          <TopLeftLogo />
+        </div>
+        <div className="absolute top-0 right-0 z-50 mt-4 mr-4">
+          <TopRightNavigation />
+        </div>
         <main className="relative flex flex-col flex-1">{children}</main>
         <Footer />
       </div>

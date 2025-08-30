@@ -30,6 +30,25 @@ function readDb(): DbContent {
   return JSON.parse(dbRaw);
 }
 
+export async function GET(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const ownerAddress = searchParams.get("owner");
+    const db = readDb();
+
+    let vehicles = db.vehicles;
+
+    if (ownerAddress) {
+      vehicles = vehicles.filter(vehicle => vehicle.currentOwner.toLowerCase() === ownerAddress.toLowerCase());
+    }
+
+    return NextResponse.json(vehicles, { status: 200 });
+  } catch (error: any) {
+    console.error("Error fetching vehicles:", error);
+    return NextResponse.json({ message: error.message || "Internal server error" }, { status: 500 });
+  }
+}
+
 // Helper to write to the database
 function writeDb(data: DbContent) {
   fs.writeFileSync(dbPath, JSON.stringify(data, null, 2), "utf-8");
