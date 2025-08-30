@@ -74,7 +74,7 @@
       "model": "Fiesta",
       "year": 2020,
       "odometer": 200,
-      "currentOwner": "0xd6f050a4f72abb98fb298f9173254645b82c3dc4",
+      "currentOwner": "0x6fB431FbE9f703C486da001644aBe8Cb34e402B9",
       "history": [
         {
           "type": "REGISTERED",
@@ -84,6 +84,33 @@
           "chain": {
             "network": "Base Sepolia",
             "txHash": "0x32f26e5f16ff965a8b0ad6214f6ead587238f3b1ff4888085da166b79181fe77"
+          }
+        },
+        {
+          "type": "MAINTENANCE",
+          "timestamp": "2025-08-30T05:02:10.604Z",
+          "actor": "0xD6F050a4F72abb98FB298f9173254645b82c3DC4",
+          "data": {
+            "notes": "1 first mainteinance"
+          }
+        },
+        {
+          "type": "MAINTENANCE",
+          "timestamp": "2025-08-30T05:02:10.624Z",
+          "actor": "0xD6F050a4F72abb98FB298f9173254645b82c3DC4",
+          "data": {
+            "notes": "1 first mainteinance"
+          }
+        },
+        {
+          "type": "TRANSFER_COMPLETED",
+          "timestamp": "2025-08-30T05:03:46.733Z",
+          "actor": "0xd6f050a4f72abb98fb298f9173254645b82c3dc4",
+          "to": "0x6fB431FbE9f703C486da001644aBe8Cb34e402B9",
+          "odometer": 20000000,
+          "chain": {
+            "network": "Base Sepolia",
+            "txHash": "0x4d77f2d03c9a757825e30c6aa22f73a45fe7c2c8b457493cdc73495e7a1f24dd"
           }
         }
       ]
