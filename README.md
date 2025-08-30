@@ -1,115 +1,141 @@
-<div align="left">
-  <a href="https://lisk.com"><img alt="Lisk" src="./packages/nextjs/public/readme-banner.png" width="100%"></a>
-</div>
+
 
 <br />
 
-Scaffold-Lisk is a fork of Scaffold-OP with minimal differences, providing additional dApp examples, native support for Superchain testnets, and more low-level instructions. We highly recommend the Scaffold-ETH2 docs as the primary guideline.
+# 🚗 RideRecords: Decentralized Vehicle History
 
-🧪 An open-source, up-to-date toolkit for building decentralized applications (dapps) on the Ethereum blockchain. It's designed to make it easier for developers to create and deploy smart contracts and build user interfaces that interact with those contracts.
+## 🚀 Overview
+**RideRecords** is an innovative decentralized application (dApp) built on the **Scaffold-Lisk** framework, designed to bring transparency and immutability to vehicle history records. Tired of odometer fraud, hidden accident histories, and untraceable ownership transfers? RideRecords leverages blockchain technology to provide a secure, verifiable, and permanent ledger for every vehicle.
 
-⚙️ Built using NextJS, RainbowKit, Hardhat, Wagmi, Viem, and Typescript.
+Powered by **Next.js**, **Hardhat**, **Wagmi**, **Viem**, and **RainbowKit**, this application demonstrates how a modern web interface can seamlessly interact with smart contracts to manage crucial vehicle data. From registration to ownership transfers and maintenance records, every significant event in a vehicle's life is recorded on-chain, creating a single source of truth accessible to everyone.
 
-- ✅ **Contract Hot Reload**: Your frontend auto-adapts to your smart contract as you edit it.
-- 🪝 **[Custom hooks](https://docs.scaffoldeth.io/hooks/)**: Collection of React hooks wrapper around [wagmi](https://wagmi.sh/) to simplify interactions with smart contracts with typescript autocompletion.
-- 🧱 [**Components**](https://docs.scaffoldeth.io/components/): Collection of common web3 components to quickly build your frontend.
-- 🔥 **Burner Wallet & Local Faucet**: Quickly test your application with a burner wallet and local faucet.
-- 🔐 **Integration with Wallet Providers**: Connect to different wallet providers and interact with the Ethereum network.
+## ✨ Key Features
 
-<div align="center" style="margin-top: 24px;">
-  <img alt="App demo" src="./packages/nextjs/public/scaffold-lisk-landing.png" width="100%">
-</div>
+-   **Decentralized Vehicle Registration**: Register new vehicles on the blockchain with essential details, creating an immutable genesis record.
+-   **Secure Ownership Transfer**: Facilitate transparent and verifiable vehicle ownership changes, securely recorded on-chain.
+-   **Verified Maintenance History**: Owners can add maintenance logs, mileage updates, and other critical events, building a comprehensive service history.
+-   **Personalized Vehicle Management**: A "My Vehicles" page allows connected users to view all vehicles they currently own, with quick access to detailed records via an interactive modal.
+-   **Intuitive & Responsive UI**: A beautifully crafted user interface, inspired by modern design principles, ensures a smooth and engaging experience across all devices.
+-   **Multi-language Support**: Seamlessly switch between English and Spanish for a broader user base.
 
-## Requirements
+## 🛠️ Technology Stack
 
-Before you begin, you need to install the following tools:
+**Smart Contracts & Blockchain Interaction:**
+-   **Solidity**: For writing the `RideRecords.sol` smart contract.
+-   **Hardhat**: Ethereum development environment for compiling, deploying, and testing smart contracts.
+-   **Wagmi & Viem**: React hooks and low-level interfaces for interacting with Ethereum smart contracts and the blockchain.
+-   **RainbowKit**: A comprehensive wallet connection library for a seamless user authentication experience.
+-   **Base Sepolia**: The target Superchain testnet for contract deployment and interaction.
 
-- [Node (>= v18.17)](https://nodejs.org/en/download/)
-- Yarn ([v1](https://classic.yarnpkg.com/en/docs/install/) or [v2+](https://yarnpkg.com/getting-started/install))
-- [Git](https://git-scm.com/downloads)
+**Frontend & Backend (Next.js SSR for MVP):**
+-   **Next.js (React)**: A powerful React framework for building fast and scalable web applications, handling both client-side rendering and server-side rendering (SSR) for API routes.
+-   **Tailwind CSS**: A utility-first CSS framework for rapid and consistent styling.
+-   **`db.json` (Local Storage)**: For hackathon MVP purposes, a simple JSON file acts as a local "database" managed via Next.js API routes to store off-chain vehicle details and historical events that complement on-chain data.
+-   **`nanoid`**: Used for generating unique IDs for off-chain records.
 
-## Quickstart
+## 🏗️ Architecture Overview
 
-To get started with Scaffold-Lisk, follow the steps below:
+The RideRecords application follows a hybrid architecture, combining the benefits of decentralized blockchain storage with a performant Next.js frontend.
 
-1. Clone this repo & install dependencies
+-   **Frontend**: Built with Next.js, it provides the user interface for interacting with the dApp. It leverages `wagmi` and `scaffold-lisk`'s custom hooks to send transactions and read data from the `RideRecords` smart contract.
+-   **Smart Contract (`RideRecords.sol`)**: Deployed on the Base Sepolia testnet, this Solidity contract manages core vehicle ownership and event immutability.
+-   **Next.js API Routes (Backend)**: For the hackathon MVP, server-side API routes are implemented in Next.js to handle persistent storage of richer vehicle metadata and detailed event histories in a local `db.json` file. These routes are called after successful on-chain transactions to synchronize off-chain data.
 
-```
-git clone https://github.com/LiskHQ/scaffold-lisk.git
-cd scaffold-lisk
-yarn install
-```
-
-2. Run a local network in the first terminal:
-
-```
-yarn chain
-```
-
-This command starts a local Ethereum network using Hardhat. The network runs on your local machine and can be used for testing and development. You can customize the network configuration in `hardhat.config.ts`.
-
-3. On a second terminal, deploy the test contract:
-
-```
-yarn deploy
-```
-
-This command deploys a test smart contract to the local network. The contract is located in `packages/hardhat/contracts` and can be modified to suit your needs. The `yarn deploy` command uses the deploy script located in `packages/hardhat/deploy` to deploy the contract to the network. You can also customize the deploy script.
-
-4. On the same terminal, start your NextJS app:
-
-```
-yarn start
+```mermaid
+graph TD
+    A[User's Browser] --> B(Next.js Frontend)
+    B --> C{Wallet Connection & Interaction}
+    C --> D[RainbowKit]
+    C --> E[Wagmi / Viem Hooks]
+    E --> F[RideRecords.sol Smart Contract]
+    F --> G[Base Sepolia Blockchain]
+    B --> H[Next.js API Routes]
+    H --> I[db.json (Local Storage)]
+    F --- H
 ```
 
-Visit your app on: `http://localhost:3000`. You can interact with your smart contract using the `Debug Contracts` page. You can tweak the app config in `packages/nextjs/scaffold.config.ts`.
+## 📂 Project Structure
 
-Run smart contract test with `yarn hardhat:test`
+-   `packages/hardhat`: Contains the `RideRecords.sol` smart contract, deployment scripts, and Hardhat configuration.
+-   `packages/nextjs`: Houses the Next.js frontend application, including pages, components, hooks, styles, and API routes.
+    -   `app/`: Next.js App Router pages (e.g., `/`, `/register`, `/my-vehicles`, `/vehicle/[serialHash]`).
+    -   `components/`: Reusable React components, including `TopLeftLogo` and `TopRightNavigation`.
+    -   `app/api/`: Next.js API routes for interacting with `db.json`.
+    -   `db.json`: The local JSON file acting as a mock database.
+-   `README.md`: This document.
+-   `PRD.md`: The Product Requirements Document outlining the project goals.
 
-- Edit your smart contract `YourContract.sol` in `packages/hardhat/contracts`
-- Edit your frontend in `packages/nextjs/pages`
-- Edit your deployment scripts in `packages/hardhat/deploy`
+## ⚡ Quickstart
 
-## Deploy Contracts to Superchain Testnet(s)
+Follow these steps to get your RideRecords dApp up and running:
 
-To deploy contracts to a remote testnet (e.g. Optimism Sepolia), follow the steps below:
+1.  **Clone the repository & install dependencies**:
 
-1. Get Superchain Sepolia ETH from the [Superchain Faucet](https://app.optimism.io/faucet)
+    ```bash
+    git clone https://github.com/LiskHQ/scaffold-lisk.git
+    cd scaffold-lisk
+    yarn install
+    ```
 
-2. Inside the `packages/hardhat` directory, copy `.env.example` to `.env`.
+2.  **Run a local blockchain network**:
+    Open a new terminal and run:
 
-   ```bash
-   cd packages/hardhat && cp .env.example .env
-   ```
+    ```bash
+    yarn chain
+    ```
+    This command starts a local Hardhat development network, essential for deploying and testing your smart contracts.
 
-3. Edit your `.env` to specify the environment variables. Only specifying the `DEPLOYER_PRIVATE_KEY` is necessary here. The contract will be deployed from the address associated with this private key, so make sure it has enough Sepolia ETH.
+3.  **Deploy the `RideRecords` smart contract**:
+    Open another terminal (while `yarn chain` is still running) and deploy the contract:
 
-   ```bash
-   DEPLOYER_PRIVATE_KEY = "your_private_key_with_sepolia_ETH";
-   ```
+    ```bash
+    yarn deploy
+    ```
+    This deploys the `RideRecords.sol` contract to your local network.
 
-4. Inside `scaffold-lisk`, run
+4.  **Start the Next.js frontend application**:
+    In a third terminal, start the Next.js development server:
 
-   ```bash
-   yarn deploy --network-options
-   ```
+    ```bash
+    yarn start
+    ```
+    Your application will be available at `http://localhost:3000`.
 
-   Use spacebar to make your selection(s). This command deploys all smart contracts in `packages/hardhat/contracts` to the selected network(s). Alternatively, you can try
+## 📖 Usage Instructions
 
-   ```bash
-   yarn deploy --network networkName
-   ```
+1.  **Connect Your Wallet**: On any page, use the wallet connector in the top-right corner to connect your Ethereum-compatible wallet (e.g., MetaMask, WalletConnect). Ensure you're connected to the **Base Sepolia** network (or your local Hardhat network for development).
+2.  **Register a New Vehicle**:
+    -   Navigate to the "Register Vehicle" page (accessible via the top-right navigation or the landing page CTA).
+    -   Fill in the vehicle details.
+    -   Click "Register Vehicle" and confirm the transaction in your wallet.
+    -   Upon successful transaction, the vehicle will be registered on-chain, and its initial details will be stored off-chain.
+3.  **View Your Vehicles**:
+    -   Click "My Vehicles" in the top-right navigation.
+    -   You'll see a list of all vehicles currently registered to your connected wallet address.
+    -   Click on any vehicle card to open a modal displaying its comprehensive details and history.
+4.  **Add Maintenance Records**:
+    -   From a vehicle's detail page (accessed via "My Vehicles"), if you are the current owner, you can add maintenance records.
+    -   Enter a description and submit.
+5.  **Transfer Ownership**:
+    -   From a vehicle's detail page, if you are the current owner, you can initiate an ownership transfer.
+    -   Enter the recipient's Ethereum address and the current odometer reading.
+    -   Confirm the transaction in your wallet.
 
-   Network names are found in `hardhat.config.js`. Please ensure you have enough Sepolia ETH on all these Superchains. If the deployments are successful, you will see the deployment tx hash on the terminal.
+## ⚙️ Development & Customization
 
-## Adding Foundry
+-   **Smart Contract Logic**: Modify `packages/hardhat/contracts/RideRecords.sol` to update contract functionalities.
+-   **Frontend UI**: Develop and enhance the user interface in `packages/nextjs/app`, `components`, and `styles`.
+-   **Deployment**: Adjust deployment scripts in `packages/hardhat/deploy` for different network configurations.
+-   **Local Backend**: Modify Next.js API routes in `packages/nextjs/app/api` to change how off-chain data is handled.
 
-Hardhat's NodeJS stack and cleaner deployment management makes it a better default for Scaffold-Lisk.
+## 🌟 Future Enhancements
 
-To add Foundry to Scaffold-Lisk, follow this simple [tutorial](https://hardhat.org/hardhat-runner/docs/advanced/hardhat-and-foundry) by Hardhat. We recommend users who want more robust and faster testing to add Foundry.
+-   **IPFS Integration**: Store maintenance evidence and other documents directly on IPFS for true decentralization of all assets.
+-   **Advanced Backend**: Migrate `db.json` to a more robust database solution (e.g., PostgreSQL, MongoDB) for production-grade persistent storage and scalability.
+-   **Rich Event Types**: Introduce more granular event types (e.g., accident reports, inspection records) with richer metadata.
+-   **Notification System**: Implement real-time notifications for vehicle events (e.g., ownership transfer complete, new maintenance added).
+-   **Search Functionality**: Implement a global search by VIN, license plate, or serial hash.
 
-## Documentation
+## 🙏 Credits
 
-We highly recommend visiting the original [docs](https://docs.scaffoldeth.io) to learn how to start building with Scaffold-ETH 2.
-
-To know more about its features, check out their [website](https://scaffoldeth.io).
+RideRecords is built upon the excellent foundation provided by [Scaffold-Lisk](https://github.com/LiskHQ/scaffold-lisk) (a fork of [Scaffold-ETH2](https://github.com/scaffold-eth/scaffold-eth-2)), a toolkit that greatly simplifies dApp development. Special thanks to the creators and maintainers of these projects and all the underlying technologies (Next.js, Hardhat, Wagmi, RainbowKit, Viem, Tailwind CSS).
