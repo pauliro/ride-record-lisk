@@ -5,6 +5,192 @@
 import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 
 const deployedContracts = {
+  4202: {
+    RideRecords: {
+      address: "0xD796664933eF909e0B97F35d0D3264C239bc6422",
+      abi: [
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "serialHash",
+              type: "bytes32",
+            },
+          ],
+          name: "CannotTransferToZeroAddress",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "serialHash",
+              type: "bytes32",
+            },
+            {
+              internalType: "address",
+              name: "currentOwner",
+              type: "address",
+            },
+            {
+              internalType: "address",
+              name: "caller",
+              type: "address",
+            },
+          ],
+          name: "OnlyOwnerCanTransfer",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "serialHash",
+              type: "bytes32",
+            },
+          ],
+          name: "VehicleAlreadyRegistered",
+          type: "error",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "serialHash",
+              type: "bytes32",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "owner",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "odometer",
+              type: "uint256",
+            },
+          ],
+          name: "VehicleRegistered",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "serialHash",
+              type: "bytes32",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "from",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "to",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "odometer",
+              type: "uint256",
+            },
+          ],
+          name: "VehicleTransferred",
+          type: "event",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "serialHash",
+              type: "bytes32",
+            },
+          ],
+          name: "getVehicleOwner",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "serialHash",
+              type: "bytes32",
+            },
+            {
+              internalType: "uint256",
+              name: "odometer",
+              type: "uint256",
+            },
+          ],
+          name: "registerVehicle",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "serialHash",
+              type: "bytes32",
+            },
+            {
+              internalType: "address",
+              name: "to",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "odometer",
+              type: "uint256",
+            },
+          ],
+          name: "transferVehicle",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          name: "vehicleOwners",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+      ],
+      inheritedFunctions: {},
+    },
+  },
   31337: {
     RideRecords: {
       address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",

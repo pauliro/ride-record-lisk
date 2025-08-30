@@ -1,0 +1,278 @@
+{
+  "address": "0xD796664933eF909e0B97F35d0D3264C239bc6422",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "serialHash",
+          "type": "bytes32"
+        }
+      ],
+      "name": "CannotTransferToZeroAddress",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "serialHash",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "currentOwner",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "caller",
+          "type": "address"
+        }
+      ],
+      "name": "OnlyOwnerCanTransfer",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "serialHash",
+          "type": "bytes32"
+        }
+      ],
+      "name": "VehicleAlreadyRegistered",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "serialHash",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "odometer",
+          "type": "uint256"
+        }
+      ],
+      "name": "VehicleRegistered",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "serialHash",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "odometer",
+          "type": "uint256"
+        }
+      ],
+      "name": "VehicleTransferred",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "serialHash",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getVehicleOwner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "serialHash",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "odometer",
+          "type": "uint256"
+        }
+      ],
+      "name": "registerVehicle",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "serialHash",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "odometer",
+          "type": "uint256"
+        }
+      ],
+      "name": "transferVehicle",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "name": "vehicleOwners",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0xec634135c13c8c3a150a3bddd9f8896ed5679772ccb466d2aa3856f10d73d073",
+  "receipt": {
+    "to": null,
+    "from": "0xD6F050a4F72abb98FB298f9173254645b82c3DC4",
+    "contractAddress": "0xD796664933eF909e0B97F35d0D3264C239bc6422",
+    "transactionIndex": 1,
+    "gasUsed": "233230",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0x020116a373f05e7516037731d7056b9926e2a6356d32ab622fc88d606720fbf6",
+    "transactionHash": "0xec634135c13c8c3a150a3bddd9f8896ed5679772ccb466d2aa3856f10d73d073",
+    "logs": [],
+    "blockNumber": 25638643,
+    "cumulativeGasUsed": "279374",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "1ac4993ddb122c7cf82150b961a0d0af",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.24+commit.e11b9ed9\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"serialHash\",\"type\":\"bytes32\"}],\"name\":\"CannotTransferToZeroAddress\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"serialHash\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"currentOwner\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"caller\",\"type\":\"address\"}],\"name\":\"OnlyOwnerCanTransfer\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"serialHash\",\"type\":\"bytes32\"}],\"name\":\"VehicleAlreadyRegistered\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"serialHash\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"odometer\",\"type\":\"uint256\"}],\"name\":\"VehicleRegistered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"serialHash\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"odometer\",\"type\":\"uint256\"}],\"name\":\"VehicleTransferred\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"serialHash\",\"type\":\"bytes32\"}],\"name\":\"getVehicleOwner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"serialHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"odometer\",\"type\":\"uint256\"}],\"name\":\"registerVehicle\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"serialHash\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"odometer\",\"type\":\"uint256\"}],\"name\":\"transferVehicle\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"vehicleOwners\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"getVehicleOwner(bytes32)\":{\"params\":{\"serialHash\":\"The keccak256 hash of the vehicle's VIN/serial number.\"},\"returns\":{\"_0\":\"The address of the current owner.\"}},\"registerVehicle(bytes32,uint256)\":{\"params\":{\"odometer\":\"The current odometer reading of the vehicle.\",\"serialHash\":\"The keccak256 hash of the vehicle's VIN/serial number.\"}},\"transferVehicle(bytes32,address,uint256)\":{\"params\":{\"odometer\":\"The current odometer reading of the vehicle.\",\"serialHash\":\"The keccak256 hash of the vehicle's VIN/serial number.\",\"to\":\"The address of the new owner.\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"getVehicleOwner(bytes32)\":{\"notice\":\"Gets the current owner of a vehicle.\"},\"registerVehicle(bytes32,uint256)\":{\"notice\":\"Registers a new vehicle, anchoring it on-chain.\"},\"transferVehicle(bytes32,address,uint256)\":{\"notice\":\"Transfers ownership of a vehicle to a new address.\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/RideRecords.sol\":\"RideRecords\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"contracts/RideRecords.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\r\\npragma solidity >=0.8.0 <0.9.0;\\r\\n\\r\\nerror VehicleAlreadyRegistered(bytes32 serialHash);\\r\\nerror OnlyOwnerCanTransfer(bytes32 serialHash, address currentOwner, address caller);\\r\\nerror CannotTransferToZeroAddress(bytes32 serialHash);\\r\\n\\r\\ncontract RideRecords {\\r\\n    // Mapping from the hashed vehicle serial number to its current owner\\r\\n    mapping(bytes32 => address) public vehicleOwners;\\r\\n\\r\\n    // Event for when a new vehicle is registered\\r\\n    event VehicleRegistered(\\r\\n        bytes32 indexed serialHash,\\r\\n        address indexed owner,\\r\\n        uint256 odometer\\r\\n    );\\r\\n\\r\\n    // Event for when a vehicle is transferred\\r\\n    event VehicleTransferred(\\r\\n        bytes32 indexed serialHash,\\r\\n        address indexed from,\\r\\n        address indexed to,\\r\\n        uint256 odometer\\r\\n    );\\r\\n\\r\\n    /**\\r\\n     * @notice Registers a new vehicle, anchoring it on-chain.\\r\\n     * @param serialHash The keccak256 hash of the vehicle's VIN/serial number.\\r\\n     * @param odometer The current odometer reading of the vehicle.\\r\\n     */\\r\\n    function registerVehicle(bytes32 serialHash, uint256 odometer) public {\\r\\n        if (vehicleOwners[serialHash] != address(0)) {\\r\\n            revert VehicleAlreadyRegistered(serialHash);\\r\\n        }\\r\\n        vehicleOwners[serialHash] = msg.sender;\\r\\n        emit VehicleRegistered(serialHash, msg.sender, odometer);\\r\\n    }\\r\\n\\r\\n    /**\\r\\n     * @notice Transfers ownership of a vehicle to a new address.\\r\\n     * @param serialHash The keccak256 hash of the vehicle's VIN/serial number.\\r\\n     * @param to The address of the new owner.\\r\\n     * @param odometer The current odometer reading of the vehicle.\\r\\n     */\\r\\n    function transferVehicle(bytes32 serialHash, address to, uint256 odometer) public {\\r\\n        address currentOwner = vehicleOwners[serialHash];\\r\\n        if (currentOwner == address(0)) {\\r\\n            revert VehicleAlreadyRegistered(serialHash);\\r\\n        }\\r\\n        if (currentOwner != msg.sender) {\\r\\n            revert OnlyOwnerCanTransfer(serialHash, currentOwner, msg.sender);\\r\\n        }\\r\\n        if (to == address(0)) {\\r\\n            revert CannotTransferToZeroAddress(serialHash);\\r\\n        }\\r\\n        \\r\\n        address from = msg.sender;\\r\\n        vehicleOwners[serialHash] = to;\\r\\n        emit VehicleTransferred(serialHash, from, to, odometer);\\r\\n    }\\r\\n\\r\\n    /**\\r\\n     * @notice Gets the current owner of a vehicle.\\r\\n     * @param serialHash The keccak256 hash of the vehicle's VIN/serial number.\\r\\n     * @return The address of the current owner.\\r\\n     */\\r\\n    function getVehicleOwner(bytes32 serialHash) public view returns (address) {\\r\\n        return vehicleOwners[serialHash];\\r\\n    }\\r\\n}\\r\\n\",\"keccak256\":\"0x82ffbd21801104ec14c0b5ce74dc0783fe5cb8bb99d11791a9658bc24ee99aef\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50610341806100206000396000f3fe608060405234801561001057600080fd5b506004361061004c5760003560e01c80632e52e026146100515780633701a93e1461009657806338b572c9146100ab578063fe4df7b0146100be575b600080fd5b61007a61005f36600461028c565b6000908152602081905260409020546001600160a01b031690565b6040516001600160a01b03909116815260200160405180910390f35b6100a96100a43660046102a5565b6100e7565b005b6100a96100b93660046102e9565b6101fa565b61007a6100cc36600461028c565b6000602081905290815260409020546001600160a01b031681565b6000838152602081905260409020546001600160a01b0316806101255760405163e108f76360e01b8152600481018590526024015b60405180910390fd5b6001600160a01b03811633146101665760405163080bbb1b60e21b8152600481018590526001600160a01b038216602482015233604482015260640161011c565b6001600160a01b0383166101905760405163aa3f344b60e01b81526004810185905260240161011c565b6000848152602081815260409182902080546001600160a01b0319166001600160a01b0387169081179091559151848152339291839188917f04e0a5ab49ddd8b70d1e0cfed86d7b1720faef6b955b734fb528349484260b08910160405180910390a45050505050565b6000828152602081905260409020546001600160a01b0316156102335760405163e108f76360e01b81526004810183905260240161011c565b6000828152602081815260409182902080546001600160a01b03191633908117909155915183815284917fef2baf146fb3b912e8cfffae8e43836edf1de29210cf6394930a86f498e161a5910160405180910390a35050565b60006020828403121561029e57600080fd5b5035919050565b6000806000606084860312156102ba57600080fd5b8335925060208401356001600160a01b03811681146102d857600080fd5b929592945050506040919091013590565b600080604083850312156102fc57600080fd5b5050803592602090910135915056fea264697066735822122040195241da4692a557678cb6e13d15d1d15a27f627afa762ae2bb1e27496f56f64736f6c63430008180033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061004c5760003560e01c80632e52e026146100515780633701a93e1461009657806338b572c9146100ab578063fe4df7b0146100be575b600080fd5b61007a61005f36600461028c565b6000908152602081905260409020546001600160a01b031690565b6040516001600160a01b03909116815260200160405180910390f35b6100a96100a43660046102a5565b6100e7565b005b6100a96100b93660046102e9565b6101fa565b61007a6100cc36600461028c565b6000602081905290815260409020546001600160a01b031681565b6000838152602081905260409020546001600160a01b0316806101255760405163e108f76360e01b8152600481018590526024015b60405180910390fd5b6001600160a01b03811633146101665760405163080bbb1b60e21b8152600481018590526001600160a01b038216602482015233604482015260640161011c565b6001600160a01b0383166101905760405163aa3f344b60e01b81526004810185905260240161011c565b6000848152602081815260409182902080546001600160a01b0319166001600160a01b0387169081179091559151848152339291839188917f04e0a5ab49ddd8b70d1e0cfed86d7b1720faef6b955b734fb528349484260b08910160405180910390a45050505050565b6000828152602081905260409020546001600160a01b0316156102335760405163e108f76360e01b81526004810183905260240161011c565b6000828152602081815260409182902080546001600160a01b03191633908117909155915183815284917fef2baf146fb3b912e8cfffae8e43836edf1de29210cf6394930a86f498e161a5910160405180910390a35050565b60006020828403121561029e57600080fd5b5035919050565b6000806000606084860312156102ba57600080fd5b8335925060208401356001600160a01b03811681146102d857600080fd5b929592945050506040919091013590565b600080604083850312156102fc57600080fd5b5050803592602090910135915056fea264697066735822122040195241da4692a557678cb6e13d15d1d15a27f627afa762ae2bb1e27496f56f64736f6c63430008180033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {
+      "getVehicleOwner(bytes32)": {
+        "params": {
+          "serialHash": "The keccak256 hash of the vehicle's VIN/serial number."
+        },
+        "returns": {
+          "_0": "The address of the current owner."
+        }
+      },
+      "registerVehicle(bytes32,uint256)": {
+        "params": {
+          "odometer": "The current odometer reading of the vehicle.",
+          "serialHash": "The keccak256 hash of the vehicle's VIN/serial number."
+        }
+      },
+      "transferVehicle(bytes32,address,uint256)": {
+        "params": {
+          "odometer": "The current odometer reading of the vehicle.",
+          "serialHash": "The keccak256 hash of the vehicle's VIN/serial number.",
+          "to": "The address of the new owner."
+        }
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {
+      "getVehicleOwner(bytes32)": {
+        "notice": "Gets the current owner of a vehicle."
+      },
+      "registerVehicle(bytes32,uint256)": {
+        "notice": "Registers a new vehicle, anchoring it on-chain."
+      },
+      "transferVehicle(bytes32,address,uint256)": {
+        "notice": "Transfers ownership of a vehicle to a new address."
+      }
+    },
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 21,
+        "contract": "contracts/RideRecords.sol:RideRecords",
+        "label": "vehicleOwners",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_mapping(t_bytes32,t_address)"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_bytes32": {
+        "encoding": "inplace",
+        "label": "bytes32",
+        "numberOfBytes": "32"
+      },
+      "t_mapping(t_bytes32,t_address)": {
+        "encoding": "mapping",
+        "key": "t_bytes32",
+        "label": "mapping(bytes32 => address)",
+        "numberOfBytes": "32",
+        "value": "t_address"
+      }
+    }
+  }
+}

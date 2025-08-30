@@ -1,0 +1,4 @@
+#  npx hardhat deploy --network liskSepolia
+deploying "RideRecords" (tx: 0xec634135c13c8c3a150a3bddd9f8896ed5679772ccb466d2aa3856f10d73d073)...: deployed at 0xD796664933eF909e0B97F35d0D3264C239bc6422 with 233230 gas
+📝 Updated TypeScript contract definition file on ../nextjs/contracts/deployedContracts.ts
+

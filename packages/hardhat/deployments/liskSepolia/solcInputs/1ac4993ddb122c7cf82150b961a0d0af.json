@@ -1,0 +1,36 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/RideRecords.sol": {
+      "content": "// SPDX-License-Identifier: MIT\r\npragma solidity >=0.8.0 <0.9.0;\r\n\r\nerror VehicleAlreadyRegistered(bytes32 serialHash);\r\nerror OnlyOwnerCanTransfer(bytes32 serialHash, address currentOwner, address caller);\r\nerror CannotTransferToZeroAddress(bytes32 serialHash);\r\n\r\ncontract RideRecords {\r\n    // Mapping from the hashed vehicle serial number to its current owner\r\n    mapping(bytes32 => address) public vehicleOwners;\r\n\r\n    // Event for when a new vehicle is registered\r\n    event VehicleRegistered(\r\n        bytes32 indexed serialHash,\r\n        address indexed owner,\r\n        uint256 odometer\r\n    );\r\n\r\n    // Event for when a vehicle is transferred\r\n    event VehicleTransferred(\r\n        bytes32 indexed serialHash,\r\n        address indexed from,\r\n        address indexed to,\r\n        uint256 odometer\r\n    );\r\n\r\n    /**\r\n     * @notice Registers a new vehicle, anchoring it on-chain.\r\n     * @param serialHash The keccak256 hash of the vehicle's VIN/serial number.\r\n     * @param odometer The current odometer reading of the vehicle.\r\n     */\r\n    function registerVehicle(bytes32 serialHash, uint256 odometer) public {\r\n        if (vehicleOwners[serialHash] != address(0)) {\r\n            revert VehicleAlreadyRegistered(serialHash);\r\n        }\r\n        vehicleOwners[serialHash] = msg.sender;\r\n        emit VehicleRegistered(serialHash, msg.sender, odometer);\r\n    }\r\n\r\n    /**\r\n     * @notice Transfers ownership of a vehicle to a new address.\r\n     * @param serialHash The keccak256 hash of the vehicle's VIN/serial number.\r\n     * @param to The address of the new owner.\r\n     * @param odometer The current odometer reading of the vehicle.\r\n     */\r\n    function transferVehicle(bytes32 serialHash, address to, uint256 odometer) public {\r\n        address currentOwner = vehicleOwners[serialHash];\r\n        if (currentOwner == address(0)) {\r\n            revert VehicleAlreadyRegistered(serialHash);\r\n        }\r\n        if (currentOwner != msg.sender) {\r\n            revert OnlyOwnerCanTransfer(serialHash, currentOwner, msg.sender);\r\n        }\r\n        if (to == address(0)) {\r\n            revert CannotTransferToZeroAddress(serialHash);\r\n        }\r\n        \r\n        address from = msg.sender;\r\n        vehicleOwners[serialHash] = to;\r\n        emit VehicleTransferred(serialHash, from, to, odometer);\r\n    }\r\n\r\n    /**\r\n     * @notice Gets the current owner of a vehicle.\r\n     * @param serialHash The keccak256 hash of the vehicle's VIN/serial number.\r\n     * @return The address of the current owner.\r\n     */\r\n    function getVehicleOwner(bytes32 serialHash) public view returns (address) {\r\n        return vehicleOwners[serialHash];\r\n    }\r\n}\r\n"
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "evmVersion": "paris",
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "devdoc",
+          "userdoc",
+          "storageLayout",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    },
+    "metadata": {
+      "useLiteralContent": true
+    }
+  }
+}
