@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useAccount } from "wagmi";
@@ -68,11 +68,6 @@ const VehicleDetailPage = () => {
     fromBlock: BigInt(0),
   });
 
-  console.log("VehicleDetailPage - serialHash:", serialHash);
-  console.log("VehicleDetailPage - contractOwner:", contractOwner);
-  console.log("VehicleDetailPage - registeredEvents:", registeredEvents);
-  console.log("VehicleDetailPage - transferredEvents:", transferredEvents);
-
   // Write function for transferring ownership
   const { writeAsync: transferVehicle } = useScaffoldContractWrite({
     contractName: "RideRecords",
@@ -118,78 +113,84 @@ const VehicleDetailPage = () => {
     },
   });
 
+  // Memoized function to fetch vehicle data from backend and combine with on-chain events
+  const fetchVehicleData = useCallback(async () => {
+    if (!serialHash || isLoadingContractOwner || isLoadingRegisteredEvents || isLoadingTransferredEvents) return; // Wait for on-chain data to load
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Fetch vehicle data from backend API
+      const response = await fetch(`/api/vehicles/${serialHash}`);
+      const backendData: VehicleData = await response.json();
+
+      if (!response.ok) {
+        throw new Error((backendData as any).message || "Failed to fetch vehicle from backend");
+      }
+
+      // Combine on-chain events with off-chain data
+      const combinedHistory: HistoryEvent[] = [...backendData.history];
+
+      registeredEvents?.forEach(event => {
+        if (event.log && event.args) {
+          combinedHistory.push({
+            type: "REGISTERED",
+            timestamp: new Date(Number(event.log.blockNumber) * 1000).toISOString(), // Using blockNumber as timestamp approximation
+            actor: event.args.owner || "",
+            odometer: Number(event.args.odometer),
+            chain: { network: "Base Sepolia", txHash: event.log.transactionHash },
+          });
+        }
+      });
+
+      transferredEvents?.forEach(event => {
+        if (event.log && event.args) {
+          combinedHistory.push({
+            type: "TRANSFER_COMPLETED",
+            timestamp: new Date(Number(event.log.blockNumber) * 1000).toISOString(), // Using blockNumber as timestamp approximation
+            actor: event.args.from || "", // Previous owner
+            to: event.args.to || "", // New owner
+            odometer: Number(event.args.odometer),
+            chain: { network: "Base Sepolia", txHash: event.log.transactionHash },
+          });
+        }
+      });
+
+      combinedHistory.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+
+      setVehicle({
+        ...backendData,
+        history: combinedHistory,
+        currentOwner: contractOwner || backendData.currentOwner,
+      });
+    } catch (err: any) {
+      console.error("Error fetching vehicle data:", err);
+      setError(err.message || "Failed to load vehicle data.");
+    } finally {
+      setLoading(false);
+    }
+  }, [
+    serialHash,
+    isLoadingContractOwner,
+    isLoadingRegisteredEvents,
+    isLoadingTransferredEvents,
+    registeredEvents,
+    transferredEvents,
+    contractOwner,
+  ]);
+
+  console.log("VehicleDetailPage - serialHash:", serialHash);
+  console.log("VehicleDetailPage - contractOwner:", contractOwner);
+  console.log("VehicleDetailPage - registeredEvents:", registeredEvents);
+  console.log("VehicleDetailPage - transferredEvents:", transferredEvents);
+
   // Combine all loading states
   const isPageLoading = isLoadingContractOwner || isLoadingRegisteredEvents || isLoadingTransferredEvents || loading;
 
   useEffect(() => {
-    const fetchVehicleData = async () => {
-      if (!serialHash || isLoadingContractOwner || isLoadingRegisteredEvents || isLoadingTransferredEvents) return; // Wait for on-chain data to load
-      setLoading(true);
-      setError(null);
-
-      try {
-        // Fetch vehicle data from backend API
-        const response = await fetch(`/api/vehicles/${serialHash}`);
-        const backendData: VehicleData = await response.json();
-
-        if (!response.ok) {
-          throw new Error(backendData.message || "Failed to fetch vehicle from backend");
-        }
-
-        // Combine on-chain events with off-chain data
-        const combinedHistory: HistoryEvent[] = [...backendData.history];
-
-        registeredEvents?.forEach(event => {
-          if (event.log && event.log.block && event.args) {
-            combinedHistory.push({
-              type: "REGISTERED",
-              timestamp: new Date(Number(event.log.block.timestamp) * 1000).toISOString(),
-              actor: event.args.owner || "",
-              odometer: Number(event.args.odometer),
-              chain: { network: "Base Sepolia", txHash: event.log.transactionHash },
-            });
-          }
-        });
-
-        transferredEvents?.forEach(event => {
-          if (event.log && event.log.block && event.args) {
-            combinedHistory.push({
-              type: "TRANSFER_COMPLETED",
-              timestamp: new Date(Number(event.log.block.timestamp) * 1000).toISOString(),
-              actor: event.args.from || "", // Previous owner
-              to: event.args.to || "", // New owner
-              odometer: Number(event.args.odometer),
-              chain: { network: "Base Sepolia", txHash: event.log.transactionHash },
-            });
-          }
-        });
-
-        combinedHistory.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
-
-        setVehicle({
-          ...backendData,
-          history: combinedHistory,
-          currentOwner: contractOwner || backendData.currentOwner,
-        });
-      } catch (err: any) {
-        console.error("Error fetching vehicle data:", err);
-        setError(err.message || "Failed to load vehicle data.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchVehicleData();
     // Added isLoading states to dependencies to trigger re-fetch when contract data is ready
-  }, [
-    serialHash,
-    registeredEvents,
-    transferredEvents,
-    contractOwner,
-    isLoadingContractOwner,
-    isLoadingRegisteredEvents,
-    isLoadingTransferredEvents,
-  ]);
+  }, [fetchVehicleData]);
 
   const handleAddMaintenance = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -230,37 +231,11 @@ const VehicleDetailPage = () => {
     }
 
     try {
-      const { receipt } = await transferVehicle({
+      await transferVehicle({
         args: [serialHash as `0x${string}`, transferToAddress as `0x${string}`, BigInt(transferOdometer)],
       });
 
-      if (!receipt || !receipt.from) {
-        throw new Error("Transaction receipt or sender address not found.");
-      }
-
-      const previousOwnerAddress = receipt.from;
-      const txHash = receipt.transactionHash;
-
-      // Call backend to update off-chain history with new owner and txHash
-      const response = await fetch(`/api/vehicles/${serialHash}/transfer`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          newOwnerAddress: transferToAddress,
-          previousOwnerAddress,
-          odometer: parseInt(transferOdometer),
-          txHash,
-        }),
-      });
-
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Failed to update backend with transfer data");
-
-      // Trigger a re-fetch of vehicle data after successful transfer
-      await fetchVehicleData(); // Call the local function to re-fetch and update state
-
-      setTransferToAddress("");
-      setTransferOdometer("");
+      // The onBlockConfirmation callback handles the backend update and UI clear
     } catch (err: any) {
       console.error("Error transferring ownership:", err);
       setError(err.message || "Failed to transfer ownership.");

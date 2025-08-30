@@ -58,7 +58,17 @@ export async function POST(req: NextRequest) {
   try {
     const { serialHash, vinMasked, make, model, year, odometer, txHash, currentOwner } = await req.json();
 
-    if (!serialHash || !vinMasked || !make || !model || !year || !odometer || !txHash || !currentOwner) {
+    if (
+      !serialHash ||
+      !vinMasked ||
+      !make ||
+      !model ||
+      !year ||
+      odometer === undefined ||
+      odometer === null ||
+      !txHash ||
+      !currentOwner
+    ) {
       return NextResponse.json({ message: "Missing required fields" }, { status: 400 });
     }
 

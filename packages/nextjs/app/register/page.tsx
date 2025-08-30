@@ -10,7 +10,7 @@ import { useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 const RegisterVehiclePage = () => {
   const router = useRouter();
   const [vin, setVin] = useState("");
-  const [make, setMake] = useState("");
+  const [brand, setBrand] = useState("");
   const [model, setModel] = useState("");
   const [year, setYear] = useState("");
   const [odometer, setOdometer] = useState("");
@@ -40,7 +40,7 @@ const RegisterVehiclePage = () => {
           body: JSON.stringify({
             serialHash,
             vinMasked: vin.slice(-4),
-            make,
+            make: brand, // Use the new 'brand' state variable
             model,
             year: parseInt(year),
             odometer: parseInt(odometer),
@@ -100,15 +100,15 @@ const RegisterVehiclePage = () => {
             />
           </div>
           <div>
-            <label htmlFor="make" className="block text-sm font-medium text-gris-neutro">
-              Make
+            <label htmlFor="brand" className="block text-sm font-medium text-gris-neutro">
+              Brand
             </label>
             <input
               type="text"
-              id="make"
+              id="brand"
               className="mt-1 block w-full border border-gris-neutro bg-transparent rounded-md shadow-sm p-2 text-white focus:ring-aqua focus:border-aqua"
-              value={make}
-              onChange={e => setMake(e.target.value)}
+              value={brand}
+              onChange={e => setBrand(e.target.value)}
               required
             />
           </div>

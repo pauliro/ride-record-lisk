@@ -114,6 +114,148 @@
           }
         }
       ]
+    },
+    {
+      "id": "e0KPqiB_HtnmyaxK2XEu_",
+      "serialHash": "0x7c394f6d6370c72cd099f2c310f599f36f136508a3b3695507c04bbd9d64b821",
+      "vinMasked": "2024",
+      "make": "Ford",
+      "model": "Fiesta",
+      "year": 2020,
+      "odometer": 2000,
+      "currentOwner": "0xd6f050a4f72abb98fb298f9173254645b82c3dc4",
+      "history": [
+        {
+          "type": "REGISTERED",
+          "timestamp": "2025-08-30T19:59:24.493Z",
+          "actor": "0xd6f050a4f72abb98fb298f9173254645b82c3dc4",
+          "odometer": 2000,
+          "chain": {
+            "network": "Base Sepolia",
+            "txHash": "0x4759063848f9e294dae984f2382005f68fbcc88b94f9b9b892f3158c4b0cb28f"
+          }
+        }
+      ]
+    },
+    {
+      "id": "QlyzPKVgJU9dNGevpNTak",
+      "serialHash": "0x3c7946a788c76a35132d11c6278b3f2d0fc84cc461483ce638f7d000c3d93fd3",
+      "vinMasked": "2025",
+      "make": "Toyota",
+      "model": "Hilux",
+      "year": 2025,
+      "odometer": 12000,
+      "currentOwner": "0xd6f050a4f72abb98fb298f9173254645b82c3dc4",
+      "history": [
+        {
+          "type": "REGISTERED",
+          "timestamp": "2025-08-30T20:10:26.197Z",
+          "actor": "0xd6f050a4f72abb98fb298f9173254645b82c3dc4",
+          "odometer": 12000,
+          "chain": {
+            "network": "Base Sepolia",
+            "txHash": "0x3f73d22f5e22130f3615e5db5bf104e01dc9dac7d3498de3d1c4e1382c943b81"
+          }
+        },
+        {
+          "type": "MAINTENANCE",
+          "timestamp": "2025-08-30T20:10:53.151Z",
+          "actor": "0xD6F050a4F72abb98FB298f9173254645b82c3DC4",
+          "data": {
+            "notes": "Fix Aug 25"
+          }
+        },
+        {
+          "type": "MAINTENANCE",
+          "timestamp": "2025-08-30T20:12:18.822Z",
+          "actor": "0xD6F050a4F72abb98FB298f9173254645b82c3DC4",
+          "data": {
+            "notes": "1 first mainteinance"
+          }
+        },
+        {
+          "type": "MAINTENANCE",
+          "timestamp": "2025-08-30T20:19:52.610Z",
+          "actor": "0xD6F050a4F72abb98FB298f9173254645b82c3DC4",
+          "data": {
+            "notes": "Quick check"
+          }
+        }
+      ]
+    },
+    {
+      "id": "aqvczHK0EX2lljZV1tMqZ",
+      "serialHash": "0x3a22d2ef10b570aafba56baca36863b905549b62aa9a6de0074a6611b05c037c",
+      "vinMasked": "ph25",
+      "make": "Suzuki",
+      "model": "Swift",
+      "year": 2025,
+      "odometer": 1000,
+      "currentOwner": "0xd6f050a4f72abb98fb298f9173254645b82c3dc4",
+      "history": [
+        {
+          "type": "REGISTERED",
+          "timestamp": "2025-08-30T20:21:52.813Z",
+          "actor": "0xd6f050a4f72abb98fb298f9173254645b82c3dc4",
+          "odometer": 1000,
+          "chain": {
+            "network": "Base Sepolia",
+            "txHash": "0xc98d7661c9fd2b343b0b8b6ea2ca10d7d773cdde56b3f8cf6ece65b4ce8ad9bd"
+          }
+        },
+        {
+          "type": "MAINTENANCE",
+          "timestamp": "2025-08-30T20:22:15.241Z",
+          "actor": "0xD6F050a4F72abb98FB298f9173254645b82c3DC4",
+          "data": {
+            "notes": "1 first mainteinance"
+          }
+        }
+      ]
+    },
+    {
+      "id": "nr2oWDKkuc9lVHE2E10pX",
+      "serialHash": "0x9e52ecf04bee6e5578d47bc01754b160146e14ed72be74bc028f30b748fee947",
+      "vinMasked": "leph",
+      "make": "Suzuki",
+      "model": "Celerio",
+      "year": 2025,
+      "odometer": 0,
+      "currentOwner": "0xd6f050a4f72abb98fb298f9173254645b82c3dc4",
+      "history": [
+        {
+          "type": "REGISTERED",
+          "timestamp": "2025-08-30T20:34:16.988Z",
+          "actor": "0xd6f050a4f72abb98fb298f9173254645b82c3dc4",
+          "odometer": 0,
+          "chain": {
+            "network": "Base Sepolia",
+            "txHash": "0x21d2358dcf024bc08d796d81f339efcc1930a3a33b5f7aeb7238926e3fa0e907"
+          }
+        }
+      ]
+    },
+    {
+      "id": "d3IMIukX1w6I2_OWtBVqn",
+      "serialHash": "0x9bcf1741902c9ca3b4b962fd43311c1472b6ce0e93ee143012a2d76a351c9e4b",
+      "vinMasked": "1234",
+      "make": "Suzuki",
+      "model": "Swift",
+      "year": 2000,
+      "odometer": 0,
+      "currentOwner": "0xd6f050a4f72abb98fb298f9173254645b82c3dc4",
+      "history": [
+        {
+          "type": "REGISTERED",
+          "timestamp": "2025-08-30T20:37:37.987Z",
+          "actor": "0xd6f050a4f72abb98fb298f9173254645b82c3dc4",
+          "odometer": 0,
+          "chain": {
+            "network": "Base Sepolia",
+            "txHash": "0x648f51aa36339235108d6caccf39e47c5ef187b4e2cbbf91fd65baa171414ec4"
+          }
+        }
+      ]
     }
   ]
 }
