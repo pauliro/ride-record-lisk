@@ -2,15 +2,15 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
+import rideRecordsLogo from "./assets/ride-records-logo.png";
 
 export const TopLeftLogo = () => {
   return (
     <Link href="/" passHref>
-      <div className="flex items-center space-x-2 cursor-pointer">
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-morado" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M18.92 6.01C18.72 5.92 17.52 5 16 5s-2.72.92-2.92 1.01l-2.43 2.5a.996.996 0 00-.65.23L4 12.01l.01 1.99 4.99 1 1 1.99 1.99-.01 2.5 2.43c.09.2.23.65.23 1.13.06 1.77 1.83 3.1 3.5 3.1 1.67 0 3.44-1.33 3.5-3.1.06-.48.2-.93.23-1.13l2.5-2.43 2-2zM12 9c-1.31 0-2.34-.33-3.23-.74-.89-.41-1.63-.98-2.22-1.74-.59-.76-.98-1.58-.98-2.52s.39-1.76.98-2.52c.59-.76 1.33-1.33 2.22-1.74C9.66 1.33 10.69 1 12 1s2.34.33 3.23.74c.89.41 1.63.98 2.22 1.74.59.76.98 1.58.98 2.52s-.39 1.76-.98 2.52c-.59.76-1.33-1.33-2.22-1.74C14.34 8.67 13.31 9 12 9zm0 12c-1.31 0-2.34-.33-3.23-.74-.89-.41-1.63-.98-2.22-1.74-.59-.76-.98-1.58-.98-2.52s.39-1.76.98-2.52c.59-.76 1.33-1.33 2.22-1.74C9.66 12.33 10.69 12 12 12s2.34.33 3.23.74c.89.41 1.63.98 2.22 1.74.59.76.98 1.58.98 2.52s-.39 1.76-.98 2.52c-.59.76-1.33 1.33-2.22-1.74C14.34 20.67 13.31 21 12 21zM12 18c-1.31 0-2.34-.33-3.23-.74-.89-.41-1.63-.98-2.22-1.74-.59-.76-.98-1.58-.98-2.52s.39-1.76.98-2.52c-.59.76-1.33 1.33-2.22-1.74C9.66 15.33 10.69 15 12 15s2.34.33 3.23.74c.89.41 1.63.98 2.22 1.74.59.76.98 1.58.98 2.52s-.39 1.76-.98 2.52c-.59.76-1.33 1.33-2.22-1.74C14.34 17.67 13.31 18 12 18z" />
-        </svg>
-        <span className="text-white text-lg font-bold">Vehicle Registry</span>
+      <div className="flex items-center space-x-2 cursor-pointer hover:opacity-80 transition-opacity">
+        <Image src={rideRecordsLogo} alt="RideRecords Logo" width={32} height={32} className="text-primary h-auto" />
+        <span className="text-primary-content text-lg font-bold">RideRecords</span>
       </div>
     </Link>
   );

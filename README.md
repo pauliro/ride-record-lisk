@@ -72,33 +72,33 @@ Follow these steps to get your RideRecords dApp up and running:
 1.  **Clone the repository & install dependencies**:
 
     ```bash
-    git clone https://github.com/LiskHQ/scaffold-lisk.git
-    cd scaffold-lisk
-    yarn install
-    ```
+git clone https://github.com/LiskHQ/scaffold-lisk.git
+cd scaffold-lisk
+yarn install
+```
 
 2.  **Run a local blockchain network**:
     Open a new terminal and run:
 
     ```bash
-    yarn chain
-    ```
+yarn chain
+```
     This command starts a local Hardhat development network, essential for deploying and testing your smart contracts.
 
 3.  **Deploy the `RideRecords` smart contract**:
     Open another terminal (while `yarn chain` is still running) and deploy the contract:
 
     ```bash
-    yarn deploy
-    ```
+yarn deploy
+```
     This deploys the `RideRecords.sol` contract to your local network.
 
 4.  **Start the Next.js frontend application**:
     In a third terminal, start the Next.js development server:
 
     ```bash
-    yarn start
-    ```
+yarn start
+```
     Your application will be available at `http://localhost:3000`.
 
 ## 📖 Usage Instructions

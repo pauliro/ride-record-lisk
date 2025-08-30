@@ -1,5 +1,6 @@
 import "@rainbow-me/rainbowkit/styles.css";
 import { Metadata } from "next";
+import { I18nProvider } from "~~/components/I18nProvider";
 import { ScaffoldEthAppWithProviders } from "~~/components/ScaffoldEthAppWithProviders";
 import { ThemeProvider } from "~~/components/ThemeProvider";
 import "~~/styles/globals.css";
@@ -9,9 +10,9 @@ const baseUrl = process.env.VERCEL_URL
   : `http://localhost:${process.env.PORT || 3000}`;
 const imageUrl = `${baseUrl}/thumbnail.jpg`;
 
-const title = "Scaffold-Lisk App";
-const titleTemplate = "%s | Scaffold-Lisk";
-const description = "Built with 🏗 Scaffold-Lisk";
+const title = "RideRecords App";
+const titleTemplate = "%s | RideRecords";
+const description = "Decentralized Vehicle History powered by Scaffold-Lisk";
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
@@ -51,7 +52,9 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
     <html suppressHydrationWarning>
       <body>
         <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark">
-          <ScaffoldEthAppWithProviders>{children}</ScaffoldEthAppWithProviders>
+          <I18nProvider>
+            <ScaffoldEthAppWithProviders>{children}</ScaffoldEthAppWithProviders>
+          </I18nProvider>
         </ThemeProvider>
       </body>
     </html>
