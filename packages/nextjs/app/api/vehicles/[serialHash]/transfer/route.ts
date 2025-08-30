@@ -1,86 +1,55 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
+import { supabase } from "~/utils/supabaseClient"; // Use ~ for alias if configured, otherwise adjust path
 
-const dbPath = path.resolve(process.cwd(), "db.json");
-
-interface HistoryEvent {
-  type: "REGISTERED" | "MAINTENANCE" | "TRANSFER_COMPLETED";
-  timestamp: string;
-  actor: string;
-  odometer?: number;
-  chain?: { network: string; txHash: string };
-  data?: { notes?: string; evidenceUri?: string };
-  to?: string;
-}
-
-interface VehicleData {
-  id: string;
-  serialHash: string;
-  vinMasked: string;
-  make: string;
-  model: string;
-  year: number;
-  odometer: number;
-  currentOwner: string;
-  history: HistoryEvent[];
-}
-
-interface DbContent {
-  vehicles: VehicleData[];
-}
-
-// Helper to read the database
-function readDb(): DbContent {
-  if (!fs.existsSync(dbPath)) {
-    return { vehicles: [] };
-  }
-  const dbRaw = fs.readFileSync(dbPath, "utf-8");
-  return JSON.parse(dbRaw);
-}
-
-// Helper to write to the database
-function writeDb(data: DbContent) {
-  fs.writeFileSync(dbPath, JSON.stringify(data, null, 2), "utf-8");
-}
-
-export async function POST(req: NextRequest, { params }: { params: { serialHash: string } }) {
+export async function POST(
+  req: NextRequest,
+  { params }: { params: { serialHash: string } },
+) {
   try {
     const { serialHash } = params;
     const { newOwnerAddress, previousOwnerAddress, odometer, txHash } = await req.json();
 
-    if (!newOwnerAddress || !previousOwnerAddress || !odometer || !txHash) {
-      return NextResponse.json({ message: "Missing required fields" }, { status: 400 });
+    if (!newOwnerAddress || !previousOwnerAddress || odometer === undefined || odometer === null || !txHash) {
+      return NextResponse.json({ message: "Missing required fields for transfer" }, { status: 400 });
     }
 
-    const db = readDb();
-    const vehicleIndex = db.vehicles.findIndex(v => v.serialHash === serialHash);
+    // Fetch the existing vehicle to get current history
+    const { data: existingVehicles, error: fetchError } = await supabase
+      .from("vehicles")
+      .select("history, current_owner")
+      .eq("serial_hash", serialHash);
 
-    if (vehicleIndex === -1) {
+    if (fetchError) throw fetchError;
+    if (!existingVehicles || existingVehicles.length === 0) {
       return NextResponse.json({ message: "Vehicle not found" }, { status: 404 });
     }
 
-    const vehicle = db.vehicles[vehicleIndex];
+    const currentHistory = existingVehicles[0].history;
+    // You might want to add more robust checks here to ensure previousOwnerAddress matches existingVehicles[0].current_owner
 
-    // Update current owner
-    vehicle.currentOwner = newOwnerAddress;
-
-    // Add transfer event to history
-    const newTransferEvent: HistoryEvent = {
+    const newTransferEvent = {
       type: "TRANSFER_COMPLETED",
       timestamp: new Date().toISOString(),
-      actor: previousOwnerAddress, // The one who initiated the transfer
+      actor: previousOwnerAddress,
       to: newOwnerAddress,
-      odometer,
-      chain: { network: "Base Sepolia", txHash },
+      odometer: odometer,
+      chain: { network: "Base Sepolia", txHash: txHash },
     };
-    vehicle.history.push(newTransferEvent);
 
-    writeDb(db);
+    const updatedHistory = [...currentHistory, newTransferEvent];
 
-    return NextResponse.json(vehicle, { status: 200 });
+    // Update the vehicle's owner and history in Supabase
+    const { data, error: updateError } = await supabase
+      .from("vehicles")
+      .update({ current_owner: newOwnerAddress, history: updatedHistory })
+      .eq("serial_hash", serialHash)
+      .select();
+
+    if (updateError) throw updateError;
+
+    return NextResponse.json(data[0], { status: 200 });
   } catch (error: any) {
-    console.error("Error transferring vehicle ownership:", error);
+    console.error("Error transferring vehicle:", error);
     return NextResponse.json({ message: error.message || "Internal server error" }, { status: 500 });
   }
 }

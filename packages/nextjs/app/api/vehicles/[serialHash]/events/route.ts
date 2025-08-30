@@ -1,76 +1,50 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
+import { supabase } from "~/utils/supabaseClient"; // Use ~ for alias if configured, otherwise adjust path
 
-const dbPath = path.resolve(process.cwd(), "db.json");
-
-interface HistoryEvent {
-  type: "REGISTERED" | "MAINTENANCE" | "TRANSFER_COMPLETED";
-  timestamp: string;
-  actor: string;
-  odometer?: number;
-  chain?: { network: string; txHash: string };
-  data?: { notes?: string; evidenceUri?: string };
-  to?: string;
-}
-
-interface VehicleData {
-  id: string;
-  serialHash: string;
-  vinMasked: string;
-  make: string;
-  model: string;
-  year: number;
-  odometer: number;
-  currentOwner: string;
-  history: HistoryEvent[];
-}
-
-interface DbContent {
-  vehicles: VehicleData[];
-}
-
-// Helper to read the database
-function readDb(): DbContent {
-  if (!fs.existsSync(dbPath)) {
-    return { vehicles: [] };
-  }
-  const dbRaw = fs.readFileSync(dbPath, "utf-8");
-  return JSON.parse(dbRaw);
-}
-
-// Helper to write to the database
-function writeDb(data: DbContent) {
-  fs.writeFileSync(dbPath, JSON.stringify(data, null, 2), "utf-8");
-}
-
-export async function POST(req: NextRequest, { params }: { params: { serialHash: string } }) {
+export async function POST(
+  req: NextRequest,
+  { params }: { params: { serialHash: string } },
+) {
   try {
     const { serialHash } = params;
     const { description, actor } = await req.json();
 
     if (!description || !actor) {
-      return NextResponse.json({ message: "Missing required fields: description or actor" }, { status: 400 });
+      return NextResponse.json({ message: "Missing required fields: description and actor" }, { status: 400 });
     }
 
-    const db = readDb();
-    const vehicleIndex = db.vehicles.findIndex(v => v.serialHash === serialHash);
+    // Fetch the existing vehicle
+    const { data: existingVehicles, error: fetchError } = await supabase
+      .from("vehicles")
+      .select("history")
+      .eq("serial_hash", serialHash);
 
-    if (vehicleIndex === -1) {
+    if (fetchError) throw fetchError;
+    if (!existingVehicles || existingVehicles.length === 0) {
       return NextResponse.json({ message: "Vehicle not found" }, { status: 404 });
     }
 
-    const newMaintenanceEvent: HistoryEvent = {
+    const currentHistory = existingVehicles[0].history;
+
+    const newMaintenanceEvent = {
       type: "MAINTENANCE",
       timestamp: new Date().toISOString(),
-      actor,
+      actor: actor,
       data: { notes: description },
     };
 
-    db.vehicles[vehicleIndex].history.push(newMaintenanceEvent);
-    writeDb(db);
+    const updatedHistory = [...currentHistory, newMaintenanceEvent];
 
-    return NextResponse.json(newMaintenanceEvent, { status: 201 });
+    // Update the vehicle's history in Supabase
+    const { data, error: updateError } = await supabase
+      .from("vehicles")
+      .update({ history: updatedHistory })
+      .eq("serial_hash", serialHash)
+      .select();
+
+    if (updateError) throw updateError;
+
+    return NextResponse.json(data[0], { status: 200 });
   } catch (error: any) {
     console.error("Error adding maintenance record:", error);
     return NextResponse.json({ message: error.message || "Internal server error" }, { status: 500 });

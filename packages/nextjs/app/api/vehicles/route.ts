@@ -1,103 +1,78 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs";
-import { nanoid } from "nanoid";
-import path from "path";
 
-const dbPath = path.resolve(process.cwd(), "db.json");
+import { nanoid } from "nanoid";
+import { supabase } from "~/utils/supabaseClient"; // Use ~ for alias if configured, otherwise adjust path
 
 interface VehicleData {
   id: string;
   serialHash: string;
   vinMasked: string;
-  make: string;
+  brand: string;
   model: string;
   year: number;
   odometer: number;
   currentOwner: string;
-  history: any[];
-}
-
-interface DbContent {
-  vehicles: VehicleData[];
-}
-
-// Helper to read the database
-function readDb(): DbContent {
-  if (!fs.existsSync(dbPath)) {
-    return { vehicles: [] };
-  }
-  const dbRaw = fs.readFileSync(dbPath, "utf-8");
-  return JSON.parse(dbRaw);
+  history: any[]; // This will be stored as JSONB in Supabase
 }
 
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const ownerAddress = searchParams.get("owner");
-    const db = readDb();
 
-    let vehicles = db.vehicles;
+    let query = supabase.from("vehicles").select("*");
 
     if (ownerAddress) {
-      vehicles = vehicles.filter(vehicle => vehicle.currentOwner.toLowerCase() === ownerAddress.toLowerCase());
+      // Supabase column names are snake_case as per our schema
+      query = query.eq("current_owner", ownerAddress.toLowerCase());
     }
 
-    return NextResponse.json(vehicles, { status: 200 });
+    const { data, error } = await query;
+
+    if (error) throw error;
+
+    // Supabase returns snake_case, you might need to transform to camelCase for frontend consistency
+    // For now, we'll return as is, but keep this in mind.
+    return NextResponse.json(data, { status: 200 });
   } catch (error: any) {
     console.error("Error fetching vehicles:", error);
     return NextResponse.json({ message: error.message || "Internal server error" }, { status: 500 });
   }
 }
 
-// Helper to write to the database
-function writeDb(data: DbContent) {
-  fs.writeFileSync(dbPath, JSON.stringify(data, null, 2), "utf-8");
-}
-
 export async function POST(req: NextRequest) {
   try {
-    const { serialHash, vinMasked, make, model, year, odometer, txHash, currentOwner } = await req.json();
+    const { serialHash, vinMasked, brand, model, year, odometer, txHash, currentOwner } = await req.json();
 
-    if (
-      !serialHash ||
-      !vinMasked ||
-      !make ||
-      !model ||
-      !year ||
-      odometer === undefined ||
-      odometer === null ||
-      !txHash ||
-      !currentOwner
-    ) {
+    if (!serialHash || !vinMasked || !brand || !model || !year || odometer === undefined || odometer === null || !txHash || !currentOwner) {
       return NextResponse.json({ message: "Missing required fields" }, { status: 400 });
     }
 
-    const db = readDb();
-
-    const newVehicle: VehicleData = {
-      id: nanoid(),
-      serialHash,
-      vinMasked,
-      make,
-      model,
-      year,
-      odometer,
-      currentOwner,
-      history: [
+    const newVehicle = {
+      id: nanoid(), // Keep using nanoid for client-side ID generation
+      serial_hash: serialHash, // Maps to serial_hash in Supabase
+      vin_masked: vinMasked,   // Maps to vin_masked in Supabase
+      brand: brand,
+      model: model,
+      year: year,
+      odometer: odometer,
+      current_owner: currentOwner, // Maps to current_owner in Supabase
+      history: [ // Initial history entry
         {
           type: "REGISTERED",
           timestamp: new Date().toISOString(),
           actor: currentOwner,
-          odometer,
-          chain: { network: "Base Sepolia", txHash },
+          odometer: odometer,
+          chain: { network: "Base Sepolia", txHash: txHash },
         },
       ],
     };
 
-    db.vehicles.push(newVehicle);
-    writeDb(db);
+    const { data, error } = await supabase.from("vehicles").insert([newVehicle]).select();
 
-    return NextResponse.json(newVehicle, { status: 201 });
+    if (error) throw error;
+
+    return NextResponse.json(data[0], { status: 201 });
   } catch (error: any) {
     console.error("Error registering vehicle:", error);
     return NextResponse.json({ message: error.message || "Internal server error" }, { status: 500 });
