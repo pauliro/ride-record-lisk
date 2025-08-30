@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.24;
+pragma solidity >=0.8.0 <0.9.0;
 
 error VehicleAlreadyRegistered(bytes32 serialHash);
 error OnlyOwnerCanTransfer(bytes32 serialHash, address currentOwner, address caller);
