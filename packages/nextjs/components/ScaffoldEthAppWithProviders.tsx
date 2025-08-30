@@ -37,7 +37,7 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
         <div className="absolute top-0 right-0 z-50 mt-4 mr-4">
           <TopRightNavigation />
         </div>
-        <main className="relative flex flex-col flex-1">{children}</main>
+        <main className="relative flex flex-col flex-1 items-center justify-center">{children}</main>
         <Footer />
       </div>
       <Toaster />

@@ -22,7 +22,7 @@ export const Footer = () => {
                 <span>Dapp Developer Console</span>
               </div>
             </div> */}
-            {isLocalNetwork && (
+            {/* {isLocalNetwork && (
               <>
                 <Faucet />
                 <Link href="/blockexplorer" passHref className="btn btn-primary btn-sm font-normal gap-1">
@@ -30,7 +30,7 @@ export const Footer = () => {
                   <span>Block Explorer</span>
                 </Link>
               </>
-            )}
+            )} */}
           </div>
         </div>
       </div>

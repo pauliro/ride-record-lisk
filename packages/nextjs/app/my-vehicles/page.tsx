@@ -47,6 +47,17 @@ const MyVehiclesPage = () => {
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
 
   useEffect(() => {
+    if (showModal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [showModal]);
+
+  useEffect(() => {
     if (!connectedAddress) {
       // Redirect or show a message if not connected
       setIsLoading(false);
@@ -77,7 +88,7 @@ const MyVehiclesPage = () => {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen-no-header bg-gradient-to-br from-morado to-blue-900 text-white p-6">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-morado to-blue-900 text-white p-6 flex-1">
         <span className="loading loading-spinner loading-lg mb-4"></span>
         <p className="text-lg">Loading your vehicles...</p>
       </div>
@@ -86,7 +97,7 @@ const MyVehiclesPage = () => {
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen-no-header bg-gradient-to-br from-morado to-blue-900 text-white p-6">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-morado to-blue-900 text-white p-6 flex-1">
         <p className="text-xl text-red-400 mb-4">{error}</p>
         {!connectedAddress && (
           <p className="text-lg">Connect your wallet to get started.</p>
@@ -96,8 +107,8 @@ const MyVehiclesPage = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen-no-header bg-gradient-to-br from-morado to-blue-900 text-white p-6">
-      <div className="max-w-4xl w-full card-bg p-8 rounded-xl shadow-lg border border-gris-neutro animate-fade-in">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-morado to-blue-900 text-white p-6 flex-1">
+      <div className="max-w-4xl w-full card-bg p-8 rounded-xl shadow-lg border border-gris-neutro animate-fade-in my-auto">
         <h2 className="text-3xl font-bold text-center mb-8 text-aqua">My Registered Vehicles</h2>
         <div className="mb-8 text-center">
           <Link href="/" passHref>
@@ -132,8 +143,8 @@ const MyVehiclesPage = () => {
 
         {/* Vehicle Detail Modal */}
         {showModal && selectedVehicle && (
-          <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 p-4">
-            <div className="bg-gray-900 card-bg p-8 rounded-xl shadow-lg border border-gris-neutro max-w-2xl w-full relative">
+          <div className="fixed inset-0 bg-black bg-opacity-75 flex flex-col justify-center items-center z-50 p-4">
+            <div className="bg-gray-900 card-bg p-8 rounded-xl shadow-lg border border-gris-neutro max-w-4xl w-full relative my-auto">
               <button
                 className="absolute top-4 right-4 text-white hover:text-aqua text-2xl"
                 onClick={() => setShowModal(false)}

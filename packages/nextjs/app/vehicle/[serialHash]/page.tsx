@@ -264,7 +264,7 @@ const VehicleDetailPage = () => {
   const isOwner = connectedAddress && contractOwner && connectedAddress === contractOwner;
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen-no-header bg-gradient-to-br from-morado to-blue-900 text-white p-6">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-morado to-blue-900 text-white p-6">
       <div className="max-w-4xl w-full card-bg p-8 rounded-xl shadow-lg border border-gris-neutro animate-fade-in">
         <h1 className="text-3xl font-bold text-center mb-8 text-aqua">Vehicle Details: {vehicle.make} {vehicle.model} ({vehicle.year})</h1>
 
