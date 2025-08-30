@@ -50,7 +50,7 @@ graph TD
     E --> F[RideRecords.sol Smart Contract]
     F --> G[Base Sepolia Blockchain]
     B --> H[Next.js API Routes]
-    H --> I[db.json (Local Storage)]
+    H --> I["db.json (Local Storage)"]
     F --- H
 ```
 
