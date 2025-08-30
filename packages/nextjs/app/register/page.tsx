@@ -40,7 +40,7 @@ const RegisterVehiclePage = () => {
           body: JSON.stringify({
             serialHash,
             vinMasked: vin.slice(-4),
-            make: brand, // Use the new 'brand' state variable
+            brand,
             model,
             year: parseInt(year),
             odometer: parseInt(odometer),
