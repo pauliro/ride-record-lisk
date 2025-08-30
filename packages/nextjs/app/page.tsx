@@ -4,6 +4,8 @@ import React, { useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 // Removed RainbowKitCustomConnectButton import, as it's now in TopRightNavigation
 
+import carImage from '~~/components/assets/upscalemedia-transformed-con-back-Photoroom.png';
+
 // Removed translations object, as it's now in TopRightNavigation
 
 const Home = () => {
@@ -67,17 +69,7 @@ const Home = () => {
             </div>
           </div>
           <div className="lg:w-1/2 flex justify-center car-svg-container fade-in" ref={addFadeInRef}>
-            <svg width="600" height="300" viewBox="0 0 600 300" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="50" y="100" width="500" height="100" rx="10" fill="#6C3BAF" />
-              <path d="M120 100C120 70 180 70 180 100H120Z" fill="#0F172A" />
-              <path d="M420 100C420 70 480 70 480 100H420Z" fill="#0F172A" />
-              <rect x="250" y="100" width="100" height="100" fill="#0F172A" />
-              <path d="M70 200C70 230 100 230 100 200H70Z" fill="#06B6D4" />
-              <path d="M500 200C500 230 530 230 530 200H500Z" fill="#06B6D4" />
-              <circle cx="150" cy="200" r="20" fill="#E2E8F0" />
-              <circle cx="450" cy="200" r="20" fill="#E2E8F0" />
-              <rect x="50" y="100" width="500" height="100" rx="10" stroke="#E2E8F0" strokeWidth="2" />
-            </svg>
+            <img src={carImage.src} alt="Car Illustration" className="w-full h-auto" />
           </div>
         </div>
       </header>
