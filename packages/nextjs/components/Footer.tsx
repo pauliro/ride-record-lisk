@@ -1,16 +1,11 @@
 import React from "react";
-import Link from "next/link";
-import { hardhat } from "viem/chains";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { Faucet } from "~~/components/scaffold-eth";
-import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 
 /**
  * Site footer
  */
 export const Footer = () => {
-  const { targetNetwork } = useTargetNetwork();
-  const isLocalNetwork = targetNetwork.id === hardhat.id;
+  // const { targetNetwork } = useTargetNetwork();
+  // const isLocalNetwork = targetNetwork.id === hardhat.id;
 
   return (
     <footer className="min-h-0 py-5 px-1 mb-11 lg:mb-0 border-t border-[#252442]">

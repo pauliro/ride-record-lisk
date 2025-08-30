@@ -2,9 +2,10 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { keccak256 } from "viem/utils";
 import { useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
-import { parseEther } from "viem";
-import { keccak256 } from "viem/utils"; // You might need to install viem if not already available
+
+// You might need to install viem if not already available
 
 const RegisterVehiclePage = () => {
   const router = useRouter();
@@ -21,7 +22,7 @@ const RegisterVehiclePage = () => {
     functionName: "registerVehicle",
     args: [undefined, undefined], // Placeholder for serialHash and odometer
     value: undefined,
-    onBlockConfirmation: async (txnReceipt) => {
+    onBlockConfirmation: async txnReceipt => {
       console.log("📦 Transaction blockHash and receipt:", txnReceipt.blockHash, txnReceipt);
       // Now that we have the full receipt, we can send data to the backend API
       try {
@@ -72,7 +73,6 @@ const RegisterVehiclePage = () => {
       await registerVehicle({
         args: [serialHash, BigInt(odometer)],
       });
-
     } catch (err: any) {
       console.error("Error registering vehicle:", err);
       setError(err.message || "Failed to register vehicle.");

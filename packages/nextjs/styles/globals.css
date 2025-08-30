@@ -2,7 +2,7 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap");
 
 :root,
 [data-theme] {
@@ -16,8 +16,8 @@ body {
 
 body {
   min-height: 100vh;
-  font-family: 'Inter', sans-serif;
-  background-color: #0F172A;
+  font-family: "Inter", sans-serif;
+  background-color: #0f172a;
   overflow-x: hidden;
 }
 
@@ -38,24 +38,58 @@ h4 {
 }
 
 /* Custom styles from template */
-.text-aqua { color: #06B6D4; }
-.bg-aqua { background-color: #06B6D4; }
-.text-morado { color: #6C3BAF; }
-.bg-morado { background-color: #6C3BAF; }
-.text-gris-neutro { color: #E2E8F0; }
-.border-aqua { border-color: #06B6D4; }
-.gradient-bg { background: linear-gradient(135deg, #0F172A 0%, #151A36 100%); }
-.card-bg { background-color: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); }
-.animated { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
-.animated.visible { opacity: 1; transform: translateY(0); }
-.fade-in { opacity: 0; transition: opacity 1.5s ease-out; }
-.fade-in.visible { opacity: 1; }
+.text-aqua {
+  color: #06b6d4;
+}
+.bg-aqua {
+  background-color: #06b6d4;
+}
+.text-morado {
+  color: #6c3baf;
+}
+.bg-morado {
+  background-color: #6c3baf;
+}
+.text-gris-neutro {
+  color: #e2e8f0;
+}
+.border-aqua {
+  border-color: #06b6d4;
+}
+.gradient-bg {
+  background: linear-gradient(135deg, #0f172a 0%, #151a36 100%);
+}
+.card-bg {
+  background-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+}
+.animated {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+.animated.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.fade-in {
+  opacity: 0;
+  transition: opacity 1.5s ease-out;
+}
+.fade-in.visible {
+  opacity: 1;
+}
 
 /* Car SVG animation */
 .car-svg-container {
-    animation: float 6s ease-in-out infinite;
+  animation: float 6s ease-in-out infinite;
 }
 @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }

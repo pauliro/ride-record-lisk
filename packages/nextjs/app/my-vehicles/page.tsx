@@ -1,11 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useAccount } from "wagmi";
-import { useRouter } from "next/navigation";
-import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
-import { formatEther } from "viem";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useAccount } from "wagmi";
 
 // Helper to truncate addresses for display
 const truncateAddress = (address: string) => {
@@ -48,12 +46,12 @@ const MyVehiclesPage = () => {
 
   useEffect(() => {
     if (showModal) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     }
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     };
   }, [showModal]);
 
@@ -99,9 +97,7 @@ const MyVehiclesPage = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-morado to-blue-900 text-white p-6 flex-1">
         <p className="text-xl text-red-400 mb-4">{error}</p>
-        {!connectedAddress && (
-          <p className="text-lg">Connect your wallet to get started.</p>
-        )}
+        {!connectedAddress && <p className="text-lg">Connect your wallet to get started.</p>}
       </div>
     );
   }
@@ -131,7 +127,9 @@ const MyVehiclesPage = () => {
                   setShowModal(true);
                 }}
               >
-                <p className="text-lg font-semibold text-aqua">{vehicle.make} {vehicle.model}</p>
+                <p className="text-lg font-semibold text-aqua">
+                  {vehicle.make} {vehicle.model}
+                </p>
                 <p className="text-sm text-gris-neutro">VIN: {vehicle.vinMasked}</p>
                 <p className="text-sm text-gris-neutro">Year: {vehicle.year}</p>
                 <p className="text-sm text-gris-neutro">Odometer: {vehicle.odometer} km</p>
@@ -152,14 +150,30 @@ const MyVehiclesPage = () => {
                 &times;
               </button>
               <h3 className="text-2xl font-bold text-aqua mb-4">Vehicle Details</h3>
-              <p><strong>Make:</strong> {selectedVehicle.make}</p>
-              <p><strong>Model:</strong> {selectedVehicle.model}</p>
-              <p><strong>Year:</strong> {selectedVehicle.year}</p>
-              <p><strong>VIN Masked:</strong> {selectedVehicle.vinMasked}</p>
-              <p><strong>Serial Hash:</strong> {truncateAddress(selectedVehicle.serialHash)}</p>
-              <p><strong>Odometer:</strong> {selectedVehicle.odometer} km</p>
-              <p><strong>Current Owner:</strong> {truncateAddress(selectedVehicle.currentOwner)}</p>
-              <p><strong>Registered Transaction:</strong> {truncateAddress(selectedVehicle.txHash)}</p>
+              <p className="text-lg">
+                <strong>Make:</strong> {selectedVehicle.make}
+              </p>
+              <p className="text-lg">
+                <strong>Model:</strong> {selectedVehicle.model}
+              </p>
+              <p className="text-lg">
+                <strong>Year:</strong> {selectedVehicle.year}
+              </p>
+              <p className="text-lg">
+                <strong>VIN Masked:</strong> {selectedVehicle.vinMasked}
+              </p>
+              <p className="text-lg">
+                <strong>Serial Hash:</strong> {truncateAddress(selectedVehicle.serialHash)}
+              </p>
+              <p className="text-lg">
+                <strong>Odometer:</strong> {selectedVehicle.odometer} km
+              </p>
+              <p className="text-lg">
+                <strong>Current Owner:</strong> {truncateAddress(selectedVehicle.currentOwner)}
+              </p>
+              <p className="text-lg">
+                <strong>Registered Transaction:</strong> {truncateAddress(selectedVehicle.txHash)}
+              </p>
 
               <h4 className="text-xl font-bold text-aqua mt-6 mb-3">History</h4>
               {selectedVehicle.history.length === 0 ? (
@@ -168,14 +182,40 @@ const MyVehiclesPage = () => {
                 <ul className="space-y-2">
                   {selectedVehicle.history.map((event, index) => (
                     <li key={index} className="bg-gray-800 p-3 rounded-md">
-                      <p><strong>Type:</strong> {event.type}</p>
-                      {event.description && <p><strong>Description:</strong> {event.description}</p>}
-                      {event.actor && <p><strong>Actor:</strong> {truncateAddress(event.actor)}</p>}
-                      {event.newOwnerAddress && <p><strong>New Owner:</strong> {truncateAddress(event.newOwnerAddress)}</p>}
-                      {event.previousOwnerAddress && <p><strong>Previous Owner:</strong> {truncateAddress(event.previousOwnerAddress)}</p>}
-                      {event.odometer !== undefined && <p><strong>Odometer:</strong> {event.odometer} km</p>}
-                      <p><strong>Tx Hash:</strong> {truncateAddress(event.txHash)}</p>
-                      <p><strong>Timestamp:</strong> {new Date(event.timestamp).toLocaleString()}</p>
+                      <p className="font-semibold text-aqua">
+                        <strong>Type:</strong> {event.type}
+                      </p>
+                      {event.description && (
+                        <p>
+                          <strong>Description:</strong> {event.description}
+                        </p>
+                      )}
+                      {event.actor && (
+                        <p>
+                          <strong>Actor:</strong> {truncateAddress(event.actor)}
+                        </p>
+                      )}
+                      {event.newOwnerAddress && (
+                        <p>
+                          <strong>New Owner:</strong> {truncateAddress(event.newOwnerAddress)}
+                        </p>
+                      )}
+                      {event.previousOwnerAddress && (
+                        <p>
+                          <strong>Previous Owner:</strong> {truncateAddress(event.previousOwnerAddress)}
+                        </p>
+                      )}
+                      {event.odometer !== undefined && (
+                        <p>
+                          <strong>Odometer:</strong> {event.odometer} km
+                        </p>
+                      )}
+                      <p className="font-semibold text-aqua">
+                        <strong>Tx Hash:</strong> {truncateAddress(event.txHash)}
+                      </p>
+                      <p className="font-semibold text-aqua">
+                        <strong>Timestamp:</strong> {new Date(event.timestamp).toLocaleString()}
+                      </p>
                     </li>
                   ))}
                 </ul>

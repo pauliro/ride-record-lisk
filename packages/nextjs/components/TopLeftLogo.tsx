@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 import rideRecordsLogo from "./assets/ride-records-logo.png";
 
 export const TopLeftLogo = () => {

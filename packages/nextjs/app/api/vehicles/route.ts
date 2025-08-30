@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
-import path from "path";
 import { nanoid } from "nanoid";
+import path from "path";
 
 const dbPath = path.resolve(process.cwd(), "db.json");
 

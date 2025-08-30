@@ -1,11 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useAccount } from "wagmi";
-import { useScaffoldEventHistory, useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
-import { formatUnits } from "viem";
-import Link from "next/link";
+import { useScaffoldContractRead, useScaffoldContractWrite, useScaffoldEventHistory } from "~~/hooks/scaffold-eth";
 
 // Helper to truncate addresses for display
 const truncateAddress = (address: string) => {
@@ -112,7 +111,6 @@ const VehicleDetailPage = () => {
         // Clear form fields
         setTransferToAddress("");
         setTransferOdometer("");
-
       } catch (err: any) {
         console.error("Error sending transfer data to backend after block confirmation:", err);
         setError(err.message || "Failed to update backend after transfer.");
@@ -168,7 +166,11 @@ const VehicleDetailPage = () => {
 
         combinedHistory.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
 
-        setVehicle({ ...backendData, history: combinedHistory, currentOwner: contractOwner || backendData.currentOwner });
+        setVehicle({
+          ...backendData,
+          history: combinedHistory,
+          currentOwner: contractOwner || backendData.currentOwner,
+        });
       } catch (err: any) {
         console.error("Error fetching vehicle data:", err);
         setError(err.message || "Failed to load vehicle data.");
@@ -179,7 +181,15 @@ const VehicleDetailPage = () => {
 
     fetchVehicleData();
     // Added isLoading states to dependencies to trigger re-fetch when contract data is ready
-  }, [serialHash, registeredEvents, transferredEvents, contractOwner, isLoadingContractOwner, isLoadingRegisteredEvents, isLoadingTransferredEvents]);
+  }, [
+    serialHash,
+    registeredEvents,
+    transferredEvents,
+    contractOwner,
+    isLoadingContractOwner,
+    isLoadingRegisteredEvents,
+    isLoadingTransferredEvents,
+  ]);
 
   const handleAddMaintenance = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -259,26 +269,41 @@ const VehicleDetailPage = () => {
 
   if (isPageLoading || !vehicle) return <div className="text-center mt-10">Loading vehicle data...</div>;
   if (error) return <div className="text-center mt-10 text-red-500">Error: {error}</div>;
-  
 
   const isOwner = connectedAddress && contractOwner && connectedAddress === contractOwner;
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-morado to-blue-900 text-white p-6">
       <div className="max-w-4xl w-full card-bg p-8 rounded-xl shadow-lg border border-gris-neutro animate-fade-in">
-        <h1 className="text-3xl font-bold text-center mb-8 text-aqua">Vehicle Details: {vehicle.make} {vehicle.model} ({vehicle.year})</h1>
+        <h1 className="text-3xl font-bold text-center mb-8 text-aqua">
+          Vehicle Details: {vehicle.make} {vehicle.model} ({vehicle.year})
+        </h1>
 
         {/* Vehicle Information */}
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-aqua mb-4">Information</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-lg">
-            <p><strong>Make:</strong> {vehicle.make}</p>
-            <p><strong>Model:</strong> {vehicle.model}</p>
-            <p><strong>Year:</strong> {vehicle.year}</p>
-            <p><strong>VIN (masked):</strong> {vehicle.vinMasked}</p>
-            <p><strong>Serial Hash:</strong> {truncateAddress(vehicle.serialHash)}</p>
-            <p><strong>Odometer:</strong> {vehicle.odometer} km</p>
-            <p><strong>Current Owner:</strong> {truncateAddress(vehicle.currentOwner)}</p>
+            <p>
+              <strong>Make:</strong> {vehicle.make}
+            </p>
+            <p>
+              <strong>Model:</strong> {vehicle.model}
+            </p>
+            <p>
+              <strong>Year:</strong> {vehicle.year}
+            </p>
+            <p>
+              <strong>VIN (masked):</strong> {vehicle.vinMasked}
+            </p>
+            <p>
+              <strong>Serial Hash:</strong> {truncateAddress(vehicle.serialHash)}
+            </p>
+            <p>
+              <strong>Odometer:</strong> {vehicle.odometer} km
+            </p>
+            <p>
+              <strong>Current Owner:</strong> {truncateAddress(vehicle.currentOwner)}
+            </p>
           </div>
         </div>
 
