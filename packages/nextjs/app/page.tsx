@@ -15,6 +15,8 @@ const Home = () => {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
+    const animatedRefsArray = animatedRefs.current;
+    const fadeInRefsArray = fadeInRefs.current;
     const observerOptions = {
       root: null,
       rootMargin: "0px",
@@ -30,16 +32,14 @@ const Home = () => {
       });
     }, observerOptions);
 
-    animatedRefs.current.forEach(el => el && observer.observe(el));
-    fadeInRefs.current.forEach(el => el && observer.observe(el));
+    animatedRefsArray.forEach(el => el && observer.observe(el));
+    fadeInRefsArray.forEach(el => el && observer.observe(el));
 
     return () => {
-      const currentAnimatedRefs = animatedRefs.current;
-      const currentFadeInRefs = fadeInRefs.current;
-      currentAnimatedRefs.forEach(el => el && observer.unobserve(el));
-      currentFadeInRefs.forEach(el => el && observer.unobserve(el));
+      animatedRefsArray.forEach(el => el && observer.unobserve(el));
+      fadeInRefsArray.forEach(el => el && observer.unobserve(el));
     };
-  }, [animatedRefs, fadeInRefs]);
+  }, []);
 
   const addToRef = useCallback((el: HTMLElement | null, refArray: React.MutableRefObject<(HTMLElement | null)[]>) => {
     if (el && !refArray.current.includes(el)) {

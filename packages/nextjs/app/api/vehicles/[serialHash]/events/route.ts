@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "~/utils/supabaseClient"; // Use ~ for alias if configured, otherwise adjust path
+import { supabase } from "~/utils/supabaseClient";
 
-export async function POST(
-  req: NextRequest,
-  { params }: { params: { serialHash: string } },
-) {
+export async function POST(req: NextRequest, { params }: { params: { serialHash: string } }) {
   try {
     const { serialHash } = params;
     const { description, actor } = await req.json();
@@ -13,7 +10,6 @@ export async function POST(
       return NextResponse.json({ message: "Missing required fields: description and actor" }, { status: 400 });
     }
 
-    // Fetch the existing vehicle
     const { data: existingVehicles, error: fetchError } = await supabase
       .from("vehicles")
       .select("history")
@@ -35,7 +31,6 @@ export async function POST(
 
     const updatedHistory = [...currentHistory, newMaintenanceEvent];
 
-    // Update the vehicle's history in Supabase
     const { data, error: updateError } = await supabase
       .from("vehicles")
       .update({ history: updatedHistory })

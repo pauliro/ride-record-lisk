@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "~/utils/supabaseClient"; // Use ~ for alias if configured, otherwise adjust path
+import { supabase } from "~/utils/supabaseClient";
 
-export async function POST(
-  req: NextRequest,
-  { params }: { params: { serialHash: string } },
-) {
+export async function POST(req: NextRequest, { params }: { params: { serialHash: string } }) {
   try {
     const { serialHash } = params;
     const { newOwnerAddress, previousOwnerAddress, odometer, txHash } = await req.json();
@@ -13,7 +10,6 @@ export async function POST(
       return NextResponse.json({ message: "Missing required fields for transfer" }, { status: 400 });
     }
 
-    // Fetch the existing vehicle to get current history
     const { data: existingVehicles, error: fetchError } = await supabase
       .from("vehicles")
       .select("history, current_owner")
@@ -25,7 +21,6 @@ export async function POST(
     }
 
     const currentHistory = existingVehicles[0].history;
-    // You might want to add more robust checks here to ensure previousOwnerAddress matches existingVehicles[0].current_owner
 
     const newTransferEvent = {
       type: "TRANSFER_COMPLETED",
@@ -38,7 +33,6 @@ export async function POST(
 
     const updatedHistory = [...currentHistory, newTransferEvent];
 
-    // Update the vehicle's owner and history in Supabase
     const { data, error: updateError } = await supabase
       .from("vehicles")
       .update({ current_owner: newOwnerAddress, history: updatedHistory })

@@ -1,28 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "~/utils/supabaseClient"; // Use ~ for alias if configured, otherwise adjust path
+import { supabase } from "~/utils/supabaseClient";
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { serialHash: string } },
-) {
+export async function GET(req: NextRequest, { params }: { params: { serialHash: string } }) {
   try {
     const { serialHash } = params;
 
-    const { data, error } = await supabase
-      .from("vehicles")
-      .select("*")
-      .eq("serial_hash", serialHash)
-      .single(); // Use .single() to get a single record
+    const { data, error } = await supabase.from("vehicles").select("*").eq("serial_hash", serialHash).single();
 
     if (error) {
-      if (error.code === "PGRST116") { // No rows found
+      if (error.code === "PGRST116") {
         return NextResponse.json({ message: "Vehicle not found" }, { status: 404 });
       }
       throw error;
     }
 
     if (!data) {
-        return NextResponse.json({ message: "Vehicle not found" }, { status: 404 });
+      return NextResponse.json({ message: "Vehicle not found" }, { status: 404 });
     }
 
     return NextResponse.json(data, { status: 200 });
